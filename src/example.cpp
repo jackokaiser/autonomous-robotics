@@ -31,7 +31,7 @@ void initializeDisparityMaps (vector<Mat>& disparityMaps, const Size& size, unsi
   }
 }
 
-void filterOutObstacles (Mat& disparityMap, float tooCloseThreshold=0.2, float tooHighThreshold=2.5) {
+void filterOutDisparity (Mat& disparityMap, float tooCloseThreshold=0.2, float tooHighThreshold=2.5) {
   Point3f pixelInWorld;
   float* linePointer;
   float disparityMapValue;
@@ -39,7 +39,7 @@ void filterOutObstacles (Mat& disparityMap, float tooCloseThreshold=0.2, float t
   for(int i = 0; i < disparityMap.rows; i++) {
     linePointer = disparityMap.ptr<float>(i);
     for (int j = 0; j < disparityMap.cols; j++) {
-      disparityMapValue = linePointer[j];
+      disparityMapValue = linePointer[j] / 16.;
 
       pixelInWorld.x = (j - INTRINSIC_U0) * STEREO_BASELINE / disparityMapValue - STEREO_BASELINE / 2.;
       pixelInWorld.y = INTRINSIC_ALPHA_U * STEREO_BASELINE / disparityMapValue;
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     sgbm( leftImages[i], rightImages[i], disparityMaps[i]);
 
     disparityMaps[i].convertTo(disparityMaps[i], CV_32F);
-    filterOutObstacles(disparityMaps[i]);
+    filterOutDisparity(disparityMaps[i]);
 
   };
 

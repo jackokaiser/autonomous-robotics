@@ -52,6 +52,21 @@ void filterOutObstacles (Mat& disparityMap, float tooCloseThreshold=0.2, float t
   }
 }
 
+void computeVDisparity (const Mat& disparityMap, Mat& outputVDisparityMap) {
+  const float* linePointer;
+  float disparityMapValue;
+  for(int i = 0; i < disparityMap.rows; i++) {
+    linePointer = disparityMap.ptr<float>(i);
+    for (int j = 0; j < disparityMap.cols; j++) {
+      disparityMapValue = linePointer[j];
+      int& vDisparity = outputVDisparityMap.at<int>((int)disparityMapValue, j);
+      if (vDisparity < 32) {
+        vDisparity++;
+      }
+    }
+  }
+}
+
 void displayImages (const vector<Mat>& images) {
   Mat displayImg;
   for (unsigned int i=0; i < images.size(); i++) {
@@ -66,12 +81,14 @@ int main(int argc, char **argv)
   cout<<"OpenCV version: "<<CV_MAJOR_VERSION<<"."<<CV_MINOR_VERSION<<endl;
   vector<Mat> leftImages;
   vector<Mat> rightImages;
-
+  vector<Mat> vDisparityMaps;
+  Mat outputImg;
   loadStereoImg(leftImages, rightImages);
   unsigned int numberOfImages = leftImages.size();
 
   // initialize the disparityMap with empty images of the right size
   vector<Mat> disparityMaps;
+
   initializeDisparityMaps(disparityMaps, leftImages[0].size(), numberOfImages);
 
   // compute disparityMaps
@@ -79,12 +96,15 @@ int main(int argc, char **argv)
   for (unsigned int i=0; i < numberOfImages; i++) {
     sgbm( leftImages[i], rightImages[i], disparityMaps[i]);
 
-    disparityMaps[i].convertTo(disparityMaps[i], CV_32F);
-    filterOutObstacles(disparityMaps[i]);
+    disparityMaps[i].convertTo(outputImg, CV_16UC1);
+    computeVDisparity(disparityMaps[i], outputImg);
+    vDisparityMaps.push_back(outputImg);
+    // disparityMaps[i].convertTo(disparityMaps[i], CV_32F);
+    // filterOutObstacles(disparityMaps[i]);
 
   };
 
-  displayImages(disparityMaps);
+  displayImages(vDisparityMaps);
 
 
 

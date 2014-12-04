@@ -41,11 +41,11 @@ void filterOutObstacles (Mat& disparityMap, float tooCloseThreshold=0.2, float t
     for (int j = 0; j < disparityMap.cols; j++) {
       disparityMapValue = linePointer[j];
 
-      pixelInWorld.x = (i - INTRINSIC_U0) * STEREO_BASELINE / disparityMapValue - STEREO_BASELINE / 2.;
+      pixelInWorld.x = (j - INTRINSIC_U0) * STEREO_BASELINE / disparityMapValue - STEREO_BASELINE / 2.;
       pixelInWorld.y = INTRINSIC_ALPHA_U * STEREO_BASELINE / disparityMapValue;
-      pixelInWorld.z = CAMERA_HEIGHT - (j - INTRINSIC_V0) * INTRINSIC_ALPHA_U * STEREO_BASELINE / (INTRINSIC_ALPHAU_V * disparityMapValue);
+      pixelInWorld.z = CAMERA_HEIGHT - (i - INTRINSIC_V0) * INTRINSIC_ALPHA_U * STEREO_BASELINE / (INTRINSIC_ALPHAU_V * disparityMapValue);
 
-      if ((pixelInWorld.z < tooCloseThreshold) || (pixelInWorld.y > tooHighThreshold)) {
+      if ((pixelInWorld.z < tooCloseThreshold) || (pixelInWorld.z > tooHighThreshold)) {
         linePointer[j] = 0.;
       }
     }

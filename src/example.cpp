@@ -18,22 +18,36 @@ void loadStereoImg (vector<Mat>& leftImages, vector<Mat>& rightImages) {
   }
 }
 
+void initializeDisparityMaps (vector<Mat>& disparityMap, const Size& size, unsigned int numberOfImages) {
+  for (unsigned int i=0; i < numberOfImages; i++) {
+    disparityMap.push_back(Mat(size, CV_16UC1));
+  }
+}
+
 int main(int argc, char **argv)
 {
   cout<<"OpenCV version: "<<CV_MAJOR_VERSION<<"."<<CV_MINOR_VERSION<<endl;
   vector<Mat> leftImages;
   vector<Mat> rightImages;
+  Mat displayImg;
 
   loadStereoImg(leftImages, rightImages);
+  unsigned int numberOfImages = leftImages.size();
 
-  for (unsigned int i=0; i<leftImages.size(); i++) {
-    imshow("output image", leftImages[i]);
-    imshow("output image2", rightImages[i]);
-  }
+  // initialize the disparityMap with empty images of the right size
   vector<Mat> disparityMap;
-  StereoSGBM sgbm = StereoSGBM(0, 32, 7, 8*7*7, 32*7*7, 2, 0, 5, 100, 32, true);
-  sgbm( leftImages, rightImages, disparityMap);
+  initializeDisparityMaps(disparityMap, leftImages[0].size(), numberOfImages);
 
-  waitKey();
+  // compute disparityMaps
+  StereoSGBM sgbm = StereoSGBM(0, 32, 7, 8*7*7, 32*7*7, 2, 0, 5, 100, 32, true);
+  for (unsigned int i=0; i < numberOfImages; i++) {
+    sgbm( leftImages[i], rightImages[i], disparityMap[i]);
+    disparityMap[i].convertTo(displayImg, CV_8UC1);
+    imshow("disparity map", displayImg);
+    waitKey();
+  };
+
+
+
   return 0;
 }

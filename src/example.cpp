@@ -20,6 +20,7 @@ void loadStereoImg (vector<Mat>& leftImages, vector<Mat>& rightImages) {
 
 int main(int argc, char **argv)
 {
+  cout<<"OpenCV version: "<<CV_MAJOR_VERSION<<"."<<CV_MINOR_VERSION<<endl;
   vector<Mat> leftImages;
   vector<Mat> rightImages;
 
@@ -29,6 +30,9 @@ int main(int argc, char **argv)
     imshow("output image", leftImages[i]);
     imshow("output image2", rightImages[i]);
   }
+  vector<Mat> disparityMap;
+  StereoSGBM sgbm = StereoSGBM(0, 32, 7, 8*7*7, 32*7*7, 2, 0, 5, 100, 32, true);
+  sgbm( leftImages, rightImages, disparityMap);
 
   waitKey();
   return 0;

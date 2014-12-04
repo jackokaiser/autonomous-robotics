@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-Wall
+CFLAGS=-Wall -g
 OBJECTS=$(patsubst src/%.cpp,%.o,$(wildcard src/*.cpp))
 OBJECTS_DIR=$(patsubst src/%.cpp,objects/%.o,$(wildcard src/*.cpp))
 INC_PATH=include/

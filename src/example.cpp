@@ -4,10 +4,10 @@
 #include <vector>
 #include <string>
 
-#define INTRINSIC_U0 258.
-#define INTRINSIC_V0 156.
-#define INTRINSIC_ALPHA_U 410.
-#define INTRINSIC_ALPHAU_V 410.
+#define INTRINSIC_U0 258
+#define INTRINSIC_V0 156
+#define INTRINSIC_ALPHA_U 410
+#define INTRINSIC_ALPHAU_V 410
 #define STEREO_BASELINE 0.22
 #define CAMERA_HEIGHT 1.128
 

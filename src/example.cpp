@@ -52,12 +52,20 @@ void filterOutObstacles (Mat& disparityMap, float tooCloseThreshold=0.2, float t
   }
 }
 
+void displayImages (const vector<Mat>& images) {
+  Mat displayImg;
+  for (unsigned int i=0; i < images.size(); i++) {
+    images[i].convertTo(displayImg, CV_8UC1);
+    imshow("image", displayImg);
+    waitKey();
+  }
+}
+
 int main(int argc, char **argv)
 {
   cout<<"OpenCV version: "<<CV_MAJOR_VERSION<<"."<<CV_MINOR_VERSION<<endl;
   vector<Mat> leftImages;
   vector<Mat> rightImages;
-  Mat displayImg;
 
   loadStereoImg(leftImages, rightImages);
   unsigned int numberOfImages = leftImages.size();
@@ -74,11 +82,9 @@ int main(int argc, char **argv)
     disparityMaps[i].convertTo(disparityMaps[i], CV_32F);
     filterOutObstacles(disparityMaps[i]);
 
-
-    disparityMaps[i].convertTo(displayImg, CV_8UC1);
-    imshow("disparity map", displayImg);
-    waitKey();
   };
+
+  displayImages(disparityMaps);
 
 
 

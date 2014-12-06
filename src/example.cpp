@@ -53,13 +53,21 @@ void filterOutDisparity (Mat& disparityMap, float tooCloseThreshold=0.2, float t
 }
 
 void computeVDisparity (const Mat& disparityMap, Mat& outputVDisparityMap) {
-  const float* linePointer;
-  float disparityMapValue;
+  double maxDisparity;
+  minMaxLoc(disparityMap, NULL, &maxDisparity, NULL, NULL);
+
+  int maxDisparityValue = (int) maxDisparity;
+
+  outputVDisparityMap = Mat(Size(maxDisparityValue, disparityMap.rows),
+                            CV_8UC1);
+
+  const short* linePointer;
+  short disparityMapValue;
   for(int i = 0; i < disparityMap.rows; i++) {
-    linePointer = disparityMap.ptr<float>(i);
+    linePointer = disparityMap.ptr<short>(i);
     for (int j = 0; j < disparityMap.cols; j++) {
       disparityMapValue = linePointer[j];
-      int& vDisparity = outputVDisparityMap.at<int>((int)disparityMapValue, j);
+      char& vDisparity = outputVDisparityMap.at<char>(i,(int)disparityMapValue);
       if (vDisparity < 32) {
         vDisparity++;
       }
@@ -96,7 +104,6 @@ int main(int argc, char **argv)
   for (unsigned int i=0; i < numberOfImages; i++) {
     sgbm( leftImages[i], rightImages[i], disparityMaps[i]);
 
-    disparityMaps[i].convertTo(outputImg, CV_16UC1);
     computeVDisparity(disparityMaps[i], outputImg);
     vDisparityMaps.push_back(outputImg);
     // disparityMaps[i].convertTo(disparityMaps[i], CV_32F);

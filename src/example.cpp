@@ -31,7 +31,7 @@ void initializeDisparityMaps (vector<Mat>& disparityMaps, const Size& size, unsi
   }
 }
 
-void filterOutObstacles (Mat& disparityMap, float tooCloseThreshold=0.2, float tooHighThreshold=2.5) {
+void filterOutDisparity (Mat& disparityMap, float tooCloseThreshold=0.2, float tooHighThreshold=2.5) {
   Point3f pixelInWorld;
   float* linePointer;
   float disparityMapValue;
@@ -39,13 +39,13 @@ void filterOutObstacles (Mat& disparityMap, float tooCloseThreshold=0.2, float t
   for(int i = 0; i < disparityMap.rows; i++) {
     linePointer = disparityMap.ptr<float>(i);
     for (int j = 0; j < disparityMap.cols; j++) {
-      disparityMapValue = linePointer[j];
+      disparityMapValue = linePointer[j] / 16.;
 
-      pixelInWorld.x = (i - INTRINSIC_U0) * STEREO_BASELINE / disparityMapValue - STEREO_BASELINE / 2.;
+      pixelInWorld.x = (j - INTRINSIC_U0) * STEREO_BASELINE / disparityMapValue - STEREO_BASELINE / 2.;
       pixelInWorld.y = INTRINSIC_ALPHA_U * STEREO_BASELINE / disparityMapValue;
-      pixelInWorld.z = CAMERA_HEIGHT - (j - INTRINSIC_V0) * INTRINSIC_ALPHA_U * STEREO_BASELINE / (INTRINSIC_ALPHAU_V * disparityMapValue);
+      pixelInWorld.z = CAMERA_HEIGHT - (i - INTRINSIC_V0) * INTRINSIC_ALPHA_U * STEREO_BASELINE / (INTRINSIC_ALPHAU_V * disparityMapValue);
 
-      if ((pixelInWorld.z < tooCloseThreshold) || (pixelInWorld.y > tooHighThreshold)) {
+      if ((pixelInWorld.z < tooCloseThreshold) || (pixelInWorld.z > tooHighThreshold)) {
         linePointer[j] = 0.;
       }
     }

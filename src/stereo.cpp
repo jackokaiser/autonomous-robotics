@@ -45,22 +45,20 @@ void filterOutDisparity (const Mat& disparityMap, Mat& filteredDisparityMap, flo
 
 void computeVDisparity (const Mat& disparityMap, Mat& outputVDisparityMap) {
   double maxDisparity;
-  Mat scaledDownDisparityMap = disparityMap.clone();
-  // scaledDownDisparityMap = scaledDownDisparityMap / 16;
-  scaledDownDisparityMap = scaledDownDisparityMap;
+  int scaleDownFactor = 1;
 
-  minMaxLoc(scaledDownDisparityMap, NULL, &maxDisparity, NULL, NULL);
-  int maxDisparityValue = max<int>(32,(int)maxDisparity);
+  minMaxLoc(disparityMap, NULL, &maxDisparity, NULL, NULL);
+  int maxDisparityValue = max<int>(32,(int)maxDisparity / scaleDownFactor);
 
-  outputVDisparityMap = Mat(Size(maxDisparityValue, scaledDownDisparityMap.rows),
+  outputVDisparityMap = Mat(Size(maxDisparityValue, disparityMap.rows),
                             CV_8UC1);
 
   const short* linePointer;
   short disparityMapValue;
-  for(int i = 0; i < scaledDownDisparityMap.rows; i++) {
-    linePointer = scaledDownDisparityMap.ptr<short>(i);
-    for (int j = 0; j < scaledDownDisparityMap.cols; j++) {
-      disparityMapValue = linePointer[j];
+  for(int i = 0; i < disparityMap.rows; i++) {
+    linePointer = disparityMap.ptr<short>(i);
+    for (int j = 0; j < disparityMap.cols; j++) {
+      disparityMapValue = linePointer[j] / scaleDownFactor;
       outputVDisparityMap.at<char>(i,(int)disparityMapValue)++;
     }
   }

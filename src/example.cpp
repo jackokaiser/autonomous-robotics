@@ -31,14 +31,17 @@ void initializeDisparityMaps (vector<Mat>& disparityMaps, const Size& size, unsi
   }
 }
 
-void filterOutDisparity (Mat& disparityMap, float tooCloseThreshold=0.2, float tooHighThreshold=2.5) {
+void filterOutDisparity (const Mat& disparityMap, Mat& filteredDisparityMap, float tooCloseThreshold=0.2, float tooHighThreshold=2.5) {
+  filteredDisparityMap.release();
+  disparityMap.convertTo(filteredDisparityMap, CV_32F);
+
   Point3f pixelInWorld;
   float* linePointer;
   float disparityMapValue;
 
-  for(int i = 0; i < disparityMap.rows; i++) {
-    linePointer = disparityMap.ptr<float>(i);
-    for (int j = 0; j < disparityMap.cols; j++) {
+  for(int i = 0; i < filteredDisparityMap.rows; i++) {
+    linePointer = filteredDisparityMap.ptr<float>(i);
+    for (int j = 0; j < filteredDisparityMap.cols; j++) {
       disparityMapValue = linePointer[j] / 16.;
 
       pixelInWorld.x = (j - INTRINSIC_U0) * STEREO_BASELINE / disparityMapValue - STEREO_BASELINE / 2.;
@@ -54,23 +57,24 @@ void filterOutDisparity (Mat& disparityMap, float tooCloseThreshold=0.2, float t
 
 void computeVDisparity (const Mat& disparityMap, Mat& outputVDisparityMap) {
   double maxDisparity;
-  minMaxLoc(disparityMap, NULL, &maxDisparity, NULL, NULL);
+  Mat scaledDownDisparityMap = Mat(disparityMap);
+  scaledDownDisparityMap = scaledDownDisparityMap / 16;
 
-  int maxDisparityValue = (int) maxDisparity;
+  minMaxLoc(scaledDownDisparityMap, NULL, &maxDisparity, NULL, NULL);
+  int maxDisparityValue = max<int>(32,maxDisparity);
 
-  outputVDisparityMap = Mat(Size(maxDisparityValue, disparityMap.rows),
+  outputVDisparityMap.release();
+  outputVDisparityMap = Mat(Size(maxDisparityValue, scaledDownDisparityMap.rows),
                             CV_8UC1);
 
   const short* linePointer;
   short disparityMapValue;
-  for(int i = 0; i < disparityMap.rows; i++) {
-    linePointer = disparityMap.ptr<short>(i);
-    for (int j = 0; j < disparityMap.cols; j++) {
+  for(int i = 0; i < scaledDownDisparityMap.rows; i++) {
+    linePointer = scaledDownDisparityMap.ptr<short>(i);
+    for (int j = 0; j < scaledDownDisparityMap.cols; j++) {
       disparityMapValue = linePointer[j];
       char& vDisparity = outputVDisparityMap.at<char>(i,(int)disparityMapValue);
-      if (vDisparity < 32) {
-        vDisparity++;
-      }
+      vDisparity++;
     }
   }
 }
@@ -99,15 +103,13 @@ int main(int argc, char **argv)
 
   initializeDisparityMaps(disparityMaps, leftImages[0].size(), numberOfImages);
 
-  // compute disparityMaps
   StereoSGBM sgbm = StereoSGBM(0, 32, 7, 8*7*7, 32*7*7, 2, 0, 5, 100, 32, true);
   for (unsigned int i=0; i < numberOfImages; i++) {
     sgbm( leftImages[i], rightImages[i], disparityMaps[i]);
-
     computeVDisparity(disparityMaps[i], outputImg);
-    vDisparityMaps.push_back(outputImg);
-    // disparityMaps[i].convertTo(disparityMaps[i], CV_32F);
-    // filterOutObstacles(disparityMaps[i]);
+    // filterOutDisparity(disparityMaps[i], outputImg);
+    vDisparityMaps.push_back(Mat(outputImg));
+
 
   };
 

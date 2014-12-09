@@ -4,7 +4,7 @@ OBJECTS=$(patsubst src/%.cpp,%.o,$(wildcard src/*.cpp))
 OBJECTS_DIR=$(patsubst src/%.cpp,objects/%.o,$(wildcard src/*.cpp))
 INC_PATH=include/
 VPATH=include:src:objects:lib:bin
-LFLAGS=-I /usr/local/include/opencv/ -L /usr/local/lib/ -lopencv_core -lopencv_highgui -lopencv_calib3d -lopencv_legacy
+LFLAGS=-I /usr/local/include/opencv/ -L /usr/local/lib/ -lopencv_core -lopencv_highgui -lopencv_calib3d -lopencv_legacy -lopencv_imgproc
 # if looking for library flags, try command "${libname}-config --ldflags"
 # or "pkg-config ${libname} --libs"
 

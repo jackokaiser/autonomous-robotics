@@ -5,6 +5,7 @@
 #include <string>
 
 #include "stereo.h"
+#include "readLidarData.h"
 
 using namespace cv;
 using namespace std;
@@ -38,6 +39,8 @@ int main(int argc, char **argv)
     displayImg.release();
     outputImg.release();
   };
+
+  // readLidarData();
 
   return 0;
 }

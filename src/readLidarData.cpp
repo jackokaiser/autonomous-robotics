@@ -41,6 +41,16 @@ Point2f cartesianToImage (const Point2f& point) {
   return Point2f(u,v);
 }
 
+Rect cartesianToImage (const Rect& rect) {
+  Point2f topLeft = rect.tl();
+  Point2f bottomRight = rect.br();
+
+  Point2f topLeftConverted = cartesianToImage(topLeft);
+  Point2f bottomRightConverted = cartesianToImage(bottomRight);
+
+  return Rect(topLeftConverted, bottomRightConverted);
+}
+
 void setPixelColor(Mat img, const Point2f& pixelCoord, const Scalar& color) {
   img.at<unsigned char>(pixelCoord.y, 3*pixelCoord.x) = color[0];
   img.at<unsigned char>(pixelCoord.y, 3*pixelCoord.x+1) = color[1];
@@ -151,30 +161,23 @@ void readLidarData () {
       Point2f previousMeanImpact(meanImpactInRoi);
       float totalImpactInRoiInv = 1./totalImpactInRoi;
       meanImpactInRoi = allImpactSum * totalImpactInRoiInv;
-      double z=camera_height -(lidar_height + sqrt(meanImpactInRoi.x*meanImpactInRoi.x+meanImpactInRoi.y*meanImpactInRoi.y)*sin(lidar_pitch_angle));
-      int u=(int)uo+alpha_u*(meanImpactInRoi.x/(meanImpactInRoi.y+camera_ty));
-      int v=(int)vo+alpha_v*(z/(meanImpactInRoi.y+camera_ty));
-      if (u>0 && u<left_img.cols && v>0 && v<left_img.rows)
-        {
-          left_display_img.at<unsigned char>(v, 3*u) = 0;
-          left_display_img.at<unsigned char>(v, 3*u+1) = 255;
-          left_display_img.at<unsigned char>(v, 3*u+2) = 0;
-        }
       shiftRoi(bicyleRoi, meanImpactInRoi);
 
       Mat prediction = KF.predict();
       Point2f predictedMean(prediction.at<float>(0,0),
                             prediction.at<float>(0,1));
-      setPixelColor(left_display_img, predictedMean, Scalar(0,0,255));
-
       Point2f speed = meanImpactInRoi - previousMeanImpact;
       Mat measurement = (Mat_<float>(2, 1) <<
                          meanImpactInRoi.x,
                          meanImpactInRoi.y);
 
       KF.correct(measurement);
-      line(left_display_img, meanImpactInRoi, predictedMean, Scalar(255,255,255), 3);
-      rectangle(left_display_img, bicyleRoi, Scalar(0,255,0), -1);
+      Point2f meanImpactImage = cartesianToImage(meanImpactInRoi);
+      Point2f meanPredictedImpactImage = cartesianToImage(predictedMean);
+      Rect roiImage = cartesianToImage(bicyleRoi);
+
+      line(left_display_img, meanImpactImage, meanPredictedImpactImage, Scalar(255,255,255));
+      rectangle(left_display_img, roiImage, Scalar(0,255,0));
 
       //   prepare the display of the grid
       Mat display_grid; //  to have a RGB grid for display

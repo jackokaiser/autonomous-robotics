@@ -43,56 +43,56 @@ void readLidarData () {
   char key = 'a';
   int frame_nb = 0;
   while (key != 'q' && frame_nb != nb_frames)
-  {
-    //  Allocation/initialization of the grid
-    Mat grid = Mat::zeros(Size(nb_cells_x, nb_cells_y), CV_32F);
-
-    //  Read the stereo image
-    ostringstream filename;
-    filename<<"data/img/left_img_"<<frame_nb<<".png";
-    Mat left_img = imread(filename.str(), 0);
-    Mat left_display_img;
-    cvtColor(left_img, left_display_img, CV_GRAY2RGB);
-
-    //  Process all the lidar impacts
-    for (int i=0; i<nb_impacts/2; ++i)
     {
-      double x=lidar_data.at<double>(frame_nb, 2*i);
-      double y=lidar_data.at<double>(frame_nb, 2*i+1);
+      //  Allocation/initialization of the grid
+      Mat grid = Mat::zeros(Size(nb_cells_x, nb_cells_y), CV_32F);
 
-      //  compute the grid
-      if (x>x_min && x<x_max && y>y_min && y<y_max && y>0)
-        grid.at<float>((y_max-(y-y_min))/y_step, (x-x_min)/x_step) = 1.0;
+      //  Read the stereo image
+      ostringstream filename;
+      filename<<"data/img/left_img_"<<frame_nb<<".png";
+      Mat left_img = imread(filename.str(), 0);
+      Mat left_display_img;
+      cvtColor(left_img, left_display_img, CV_GRAY2RGB);
 
-      //  display on stereo image
-      if (y>0)
-      {
-        double z=camera_height -(lidar_height + sqrt(x*x+y*y)*sin(lidar_pitch_angle));
-        int u=(int)uo+alpha_u*(x/(y+camera_ty));
-        int v=(int)vo+alpha_v*(z/(y+camera_ty));
-        if (u>0 && u<left_img.cols && v>0 && v<left_img.rows)
+      //  Process all the lidar impacts
+      for (int i=0; i<nb_impacts/2; ++i)
         {
-          left_display_img.at<unsigned char>(v, 3*u) = 0;
-          left_display_img.at<unsigned char>(v, 3*u+1) = 0;
-          left_display_img.at<unsigned char>(v, 3*u+2) = 255;
+          double x=lidar_data.at<double>(frame_nb, 2*i);
+          double y=lidar_data.at<double>(frame_nb, 2*i+1);
+
+          //  compute the grid
+          if (x>x_min && x<x_max && y>y_min && y<y_max && y>0)
+            grid.at<float>((y_max-(y-y_min))/y_step, (x-x_min)/x_step) = 1.0;
+
+          //  display on stereo image
+          if (y>0)
+            {
+              double z=camera_height -(lidar_height + sqrt(x*x+y*y)*sin(lidar_pitch_angle));
+              int u=(int)uo+alpha_u*(x/(y+camera_ty));
+              int v=(int)vo+alpha_v*(z/(y+camera_ty));
+              if (u>0 && u<left_img.cols && v>0 && v<left_img.rows)
+                {
+                  left_display_img.at<unsigned char>(v, 3*u) = 0;
+                  left_display_img.at<unsigned char>(v, 3*u+1) = 0;
+                  left_display_img.at<unsigned char>(v, 3*u+2) = 255;
+                }
+            }
         }
-      }
+
+      //   prepare the display of the grid
+      Mat display_grid; //  to have a RGB grid for display
+      grid.convertTo(display_grid, CV_8U, 255);
+      cvtColor(display_grid, display_grid, CV_GRAY2RGB);
+
+      Mat display_grid_large;// to have a large grid for display
+      resize(display_grid, display_grid_large, Size(600,600));
+
+      //  show images
+      imshow("top view",  display_grid_large);
+      imshow("left image", left_display_img);
+
+      //  Wait for the user to press a key
+      frame_nb++;
+      key = waitKey( );
     }
-
-    //   prepare the display of the grid
-    Mat display_grid; //  to have a RGB grid for display
-    grid.convertTo(display_grid, CV_8U, 255);
-    cvtColor(display_grid, display_grid, CV_GRAY2RGB);
-
-    Mat display_grid_large;// to have a large grid for display
-    resize(display_grid, display_grid_large, Size(600,600));
-
-    //  show images
-    imshow("top view",  display_grid_large);
-    imshow("left image", left_display_img);
-
-    //  Wait for the user to press a key
-    frame_nb++;
-    key = waitKey( );
-  }
 }

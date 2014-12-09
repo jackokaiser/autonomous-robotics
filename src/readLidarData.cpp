@@ -17,7 +17,29 @@ void readLidarData () {
   fs["lidarData"]>> lidar_data;
   int nb_impacts = lidar_data.cols;
   int nb_frames = lidar_data.rows;
-  Rect bicyleRoi(4., 9., 7.5, 11.);
+  Point2f initialRoiTopLeft(4., 9.);
+  Point2f initialRoiBottomRight(7.5, 11.);
+  Rect bicyleRoi(initialRoiTopLeft, initialRoiBottomRight);
+
+  KalmanFilter KF(4, 2, 0);
+  float timestep = 1./12.5;
+
+  KF.transitionMatrix = (Mat_<float>(4, 4) <<
+                         1, 0, timestep, 0,
+                         0, 1, 0, timestep,
+                         0, 0, 1, 0,
+                         0, 0, 0, 1);
+  setIdentity(KF.measurementMatrix);
+  setIdentity(KF.processNoiseCov, Scalar::all(1e-5));
+  setIdentity(KF.measurementNoiseCov, Scalar::all(1e-1));
+  setIdentity(KF.errorCovPost, Scalar::all(1));
+  KF.statePost.at<float>(0,0) = initialRoiTopLeft.x + initialRoiBottomRight.x / 2.;
+  KF.statePost.at<float>(0,1) = initialRoiTopLeft.y + initialRoiBottomRight.y / 2.;
+  KF.statePost.at<float>(0,2) = 0;
+  KF.statePost.at<float>(0,3) = 0;
+
+
+
 
   //  extrinsic parameters of the lidar
   double lidar_pitch_angle = -1.*M_PI/180;

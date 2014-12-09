@@ -17,4 +17,7 @@ void filterOutDisparity (const cv::Mat& disparityMap, cv::Mat& filteredDisparity
 
 void computeVDisparity (const cv::Mat& disparityMap, cv::Mat& outputVDisparityMap);
 
+void disparitySeg ();
+void cartesianSeg ();
+
 #endif

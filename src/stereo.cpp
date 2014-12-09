@@ -63,3 +63,57 @@ void computeVDisparity (const Mat& disparityMap, Mat& outputVDisparityMap) {
     }
   }
 }
+
+void cartesianSeg () {
+  vector<Mat> leftImages;
+  vector<Mat> rightImages;
+  Mat disparityMap;
+  Mat outputImg;
+  Mat displayImg;
+  loadStereoImg(leftImages, rightImages);
+  unsigned int numberOfImages = leftImages.size();
+
+  StereoSGBM sgbm = StereoSGBM(0, 32, 7, 8*7*7, 32*7*7, 2, 0, 5, 100, 32, true);
+
+  for (unsigned int i=0; i < numberOfImages; i++) {
+
+    sgbm( leftImages[i], rightImages[i], disparityMap );
+
+    filterOutDisparity(disparityMap, outputImg);
+
+    outputImg.convertTo(displayImg, CV_8UC1);
+    imshow("result", displayImg);
+    waitKey();
+
+    disparityMap.release();
+    displayImg.release();
+    outputImg.release();
+  };
+}
+
+void disparitySeg () {
+  vector<Mat> leftImages;
+  vector<Mat> rightImages;
+  Mat disparityMap;
+  Mat outputImg;
+  Mat displayImg;
+  loadStereoImg(leftImages, rightImages);
+  unsigned int numberOfImages = leftImages.size();
+
+  StereoSGBM sgbm = StereoSGBM(0, 32, 7, 8*7*7, 32*7*7, 2, 0, 5, 100, 32, true);
+
+  for (unsigned int i=0; i < numberOfImages; i++) {
+
+    sgbm( leftImages[i], rightImages[i], disparityMap );
+
+    computeVDisparity(disparityMap, outputImg);
+
+    outputImg.convertTo(displayImg, CV_8UC1);
+    imshow("result", displayImg);
+    waitKey();
+
+    disparityMap.release();
+    displayImg.release();
+    outputImg.release();
+  };
+}

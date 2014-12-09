@@ -49,7 +49,7 @@ void readLidarData () {
 
     //  Read the stereo image
     ostringstream filename;
-    filename<<"img/left_img_"<<frame_nb<<".png";
+    filename<<"data/img/left_img_"<<frame_nb<<".png";
     Mat left_img = imread(filename.str(), 0);
     Mat left_display_img;
     cvtColor(left_img, left_display_img, CV_GRAY2RGB);
@@ -89,7 +89,7 @@ void readLidarData () {
 
     //  show images
     imshow("top view",  display_grid_large);
-    // imshow("left image", left_display_img);
+    imshow("left image", left_display_img);
 
     //  Wait for the user to press a key
     frame_nb++;

@@ -7,6 +7,11 @@
 #include "stereo.h"
 #include "readLidarData.h"
 
+
+#define CARTESIAN_SEG 1
+#define DISPARITY_SEG 2
+#define LIDAR_TRACK 3
+
 using namespace cv;
 using namespace std;
 
@@ -14,33 +19,23 @@ using namespace std;
 int main(int argc, char **argv)
 {
   cout<<"OpenCV version: "<<CV_MAJOR_VERSION<<"."<<CV_MINOR_VERSION<<endl;
-  vector<Mat> leftImages;
-  vector<Mat> rightImages;
-  Mat disparityMap;
-  Mat outputImg;
-  Mat displayImg;
-  loadStereoImg(leftImages, rightImages);
-  unsigned int numberOfImages = leftImages.size();
 
-  StereoSGBM sgbm = StereoSGBM(0, 32, 7, 8*7*7, 32*7*7, 2, 0, 5, 100, 32, true);
+  if (argc < 2) {
+    cout<<"Usage : "<<argv[0]<<" {exerciceNb}"<<endl;
+    return 0;
+  }
 
-  for (unsigned int i=0; i < numberOfImages; i++) {
-
-    sgbm( leftImages[i], rightImages[i], disparityMap );
-
-    computeVDisparity(disparityMap, outputImg);
-    // filterOutDisparity(disparityMap, outputImg);
-
-    outputImg.convertTo(displayImg, CV_8UC1);
-    imshow("result", displayImg);
-    waitKey();
-
-    disparityMap.release();
-    displayImg.release();
-    outputImg.release();
-  };
-
-  // readLidarData();
+switch(atoi(argv[1])) {
+  case CARTESIAN_SEG:
+    cartesianSeg();
+    break;
+  case DISPARITY_SEG:
+    disparitySeg();
+    break;
+  case LIDAR_TRACK:
+    readLidarData();
+    break;
+  }
 
   return 0;
 }

@@ -9,6 +9,44 @@
 using namespace cv;
 using namespace std;
 
+Point2f computeMiddle (const Rect& r) {
+  Point2f topLeft = r.tl();
+  Point2f bottomRight = r.br();
+
+  return Point2f((topLeft.x + bottomRight.x) / 2.,
+                 (topLeft.y + bottomRight.y) / 2.);
+}
+
+void shiftRoi (Rect& roi, const Point2f& targetCenter) {
+  Point2f currentCenter = computeMiddle(roi);
+  Point2f shift = targetCenter - currentCenter;
+  roi = roi + Point2i((int)shift.x, (int)shift.y);
+}
+Point2f cartesianToImage (const Point2f& point) {
+  //  extrinsic parameters of the lidar
+  double lidar_pitch_angle = -1.*M_PI/180;
+  double lidar_height = 0.47;
+  //  parameters of the camera
+  double uo = 256;
+  double vo = 156;
+  double alpha_u = 410;
+  double alpha_v = 410;
+  double camera_height = 1.28;
+  double camera_ty = 1.8;
+
+  double z=camera_height -(lidar_height + sqrt(point.x*point.x+point.y*point.y)*sin(lidar_pitch_angle));
+  int u=(int)uo+alpha_u*(point.x/(point.y+camera_ty));
+  int v=(int)vo+alpha_v*(z/(point.y+camera_ty));
+
+  return Point2f(u,v);
+}
+
+void setPixelColor(Mat img, const Point2f& pixelCoord, const Scalar& color) {
+  img.at<unsigned char>(pixelCoord.y, 3*pixelCoord.x) = color[0];
+  img.at<unsigned char>(pixelCoord.y, 3*pixelCoord.x+1) = color[1];
+  img.at<unsigned char>(pixelCoord.y, 3*pixelCoord.x+2) = color[2];
+}
+
 void readLidarData () {
   //  Read lidar data from a file
   Mat lidar_data;
@@ -20,6 +58,7 @@ void readLidarData () {
   Point2f initialRoiTopLeft(4., 9.);
   Point2f initialRoiBottomRight(7.5, 11.);
   Rect bicyleRoi(initialRoiTopLeft, initialRoiBottomRight);
+  Point2f meanImpactInRoi = computeMiddle(bicyleRoi);
 
   KalmanFilter KF(4, 2, 0);
   float timestep = 1./12.5;
@@ -33,8 +72,8 @@ void readLidarData () {
   setIdentity(KF.processNoiseCov, Scalar::all(1e-5));
   setIdentity(KF.measurementNoiseCov, Scalar::all(1e-1));
   setIdentity(KF.errorCovPost, Scalar::all(1));
-  KF.statePost.at<float>(0,0) = initialRoiTopLeft.x + initialRoiBottomRight.x / 2.;
-  KF.statePost.at<float>(0,1) = initialRoiTopLeft.y + initialRoiBottomRight.y / 2.;
+  KF.statePost.at<float>(0,0) = meanImpactInRoi.x;
+  KF.statePost.at<float>(0,1) = meanImpactInRoi.y;
   KF.statePost.at<float>(0,2) = 0;
   KF.statePost.at<float>(0,3) = 0;
 
@@ -65,11 +104,11 @@ void readLidarData () {
 
   char key = 'a';
   int frame_nb = 0;
+
   while (key != 'q' && frame_nb != nb_frames)
     {
-      //  Allocation/initialization of the grid
+        //  Allocation/initialization of the grid
       Mat grid = Mat::zeros(Size(nb_cells_x, nb_cells_y), CV_32F);
-
       //  Read the stereo image
       ostringstream filename;
       filename<<"data/img/left_img_"<<frame_nb<<".png";
@@ -109,8 +148,9 @@ void readLidarData () {
                 }
             }
         }
+      Point2f previousMeanImpact(meanImpactInRoi);
       float totalImpactInRoiInv = 1./totalImpactInRoi;
-      Point2f meanImpactInRoi = allImpactSum * totalImpactInRoiInv;
+      meanImpactInRoi = allImpactSum * totalImpactInRoiInv;
       double z=camera_height -(lidar_height + sqrt(meanImpactInRoi.x*meanImpactInRoi.x+meanImpactInRoi.y*meanImpactInRoi.y)*sin(lidar_pitch_angle));
       int u=(int)uo+alpha_u*(meanImpactInRoi.x/(meanImpactInRoi.y+camera_ty));
       int v=(int)vo+alpha_v*(z/(meanImpactInRoi.y+camera_ty));
@@ -120,6 +160,21 @@ void readLidarData () {
           left_display_img.at<unsigned char>(v, 3*u+1) = 255;
           left_display_img.at<unsigned char>(v, 3*u+2) = 0;
         }
+      shiftRoi(bicyleRoi, meanImpactInRoi);
+
+      Mat prediction = KF.predict();
+      Point2f predictedMean(prediction.at<float>(0,0),
+                            prediction.at<float>(0,1));
+      setPixelColor(left_display_img, predictedMean, Scalar(0,0,255));
+
+      Point2f speed = meanImpactInRoi - previousMeanImpact;
+      Mat measurement = (Mat_<float>(2, 1) <<
+                         meanImpactInRoi.x,
+                         meanImpactInRoi.y);
+
+      KF.correct(measurement);
+      line(left_display_img, meanImpactInRoi, predictedMean, Scalar(255,255,255), 3);
+      rectangle(left_display_img, bicyleRoi, Scalar(0,255,0), -1);
 
       //   prepare the display of the grid
       Mat display_grid; //  to have a RGB grid for display

@@ -65,7 +65,7 @@ void readLidarData () {
             grid.at<float>((y_max-(y-y_min))/y_step, (x-x_min)/x_step) = 1.0;
 
           //  display on stereo image
-          if (y>0)
+          if ((y>0 && y<30) && (x>-10 && x<10))
             {
               double z=camera_height -(lidar_height + sqrt(x*x+y*y)*sin(lidar_pitch_angle));
               int u=(int)uo+alpha_u*(x/(y+camera_ty));

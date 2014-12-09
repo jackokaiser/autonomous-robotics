@@ -17,11 +17,11 @@ void readLidarData () {
   fs["lidarData"]>> lidar_data;
   int nb_impacts = lidar_data.cols;
   int nb_frames = lidar_data.rows;
+  Rect bicyleRoi(4., 9., 7.5, 11.);
 
   //  extrinsic parameters of the lidar
   double lidar_pitch_angle = -1.*M_PI/180;
   double lidar_height = 0.47;
-
   //  parameters of the camera
   double uo = 256;
   double vo = 156;
@@ -40,6 +40,7 @@ void readLidarData () {
   int nb_cells_x = (x_max-x_min)/x_step;
   int nb_cells_y = (y_max-y_min)/y_step;
 
+
   char key = 'a';
   int frame_nb = 0;
   while (key != 'q' && frame_nb != nb_frames)
@@ -53,12 +54,20 @@ void readLidarData () {
       Mat left_img = imread(filename.str(), 0);
       Mat left_display_img;
       cvtColor(left_img, left_display_img, CV_GRAY2RGB);
+      Point2f allImpactSum(0.,0.);
+      unsigned int totalImpactInRoi = 0;
 
       //  Process all the lidar impacts
       for (int i=0; i<nb_impacts/2; ++i)
         {
           double x=lidar_data.at<double>(frame_nb, 2*i);
           double y=lidar_data.at<double>(frame_nb, 2*i+1);
+
+          Point2f lidarImpact(x,y);
+          if (bicyleRoi.contains(lidarImpact)) {
+            allImpactSum+=lidarImpact;
+            totalImpactInRoi++;
+          }
 
           //  compute the grid
           if (x>x_min && x<x_max && y>y_min && y<y_max && y>0)
@@ -77,6 +86,17 @@ void readLidarData () {
                   left_display_img.at<unsigned char>(v, 3*u+2) = 255;
                 }
             }
+        }
+      float totalImpactInRoiInv = 1./totalImpactInRoi;
+      Point2f meanImpactInRoi = allImpactSum * totalImpactInRoiInv;
+      double z=camera_height -(lidar_height + sqrt(meanImpactInRoi.x*meanImpactInRoi.x+meanImpactInRoi.y*meanImpactInRoi.y)*sin(lidar_pitch_angle));
+      int u=(int)uo+alpha_u*(meanImpactInRoi.x/(meanImpactInRoi.y+camera_ty));
+      int v=(int)vo+alpha_v*(z/(meanImpactInRoi.y+camera_ty));
+      if (u>0 && u<left_img.cols && v>0 && v<left_img.rows)
+        {
+          left_display_img.at<unsigned char>(v, 3*u) = 0;
+          left_display_img.at<unsigned char>(v, 3*u+1) = 255;
+          left_display_img.at<unsigned char>(v, 3*u+2) = 0;
         }
 
       //   prepare the display of the grid

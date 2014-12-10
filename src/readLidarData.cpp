@@ -25,6 +25,12 @@ void shiftRoi (Rect& roi, const Point2f& targetCenter) {
   Point2f shift = targetCenter - currentCenter;
   roi = roi + Point2i((int)shift.x, (int)shift.y);
 }
+void polygon (Mat& img, const vector<Point2f>& points, Scalar col) {
+  unsigned int nbEdges = points.size();
+  for (unsigned int i=0; i<nbEdges; i++) {
+    line(img, points[i], points[ (i+1) % nbEdges ], col);
+  }
+}
 Point2f cartesianToGrid (const Point2f& point) {
   //  define the parameters of the grid
   float x_min = -10.;
@@ -43,6 +49,7 @@ Point2f cartesianToGrid (const Point2f& point) {
     return Point2f(-1,-1);
   }
 }
+
 Rect cartesianToGrid (const Rect& rect) {
   Point2f topLeft = rect.tl();
   Point2f bottomRight = rect.br();
@@ -52,6 +59,7 @@ Rect cartesianToGrid (const Rect& rect) {
 
   return Rect(topLeftConverted, bottomRightConverted);
 }
+
 
 Point2f cartesianToImage (const Point2f& point) {
   //  extrinsic parameters of the lidar
@@ -72,14 +80,18 @@ Point2f cartesianToImage (const Point2f& point) {
   return Point2f(u,v);
 }
 
-Rect cartesianToImage (const Rect& rect) {
+vector<Point2f> cartesianToImage (const Rect& rect) {
   Point2f topLeft = rect.tl();
   Point2f bottomRight = rect.br();
+  Point2f topRight = Point2f(topLeft.x, bottomRight.y);
+  Point2f bottomLeft = Point2f(bottomRight.x, topLeft.y);
 
-  Point2f topLeftConverted = cartesianToImage(topLeft);
-  Point2f bottomRightConverted = cartesianToImage(bottomRight);
-
-  return Rect(topLeftConverted, bottomRightConverted);
+  vector<Point2f> ret;
+  ret.push_back(cartesianToImage(topLeft));
+  ret.push_back(cartesianToImage(topRight));
+  ret.push_back(cartesianToImage(bottomRight));
+  ret.push_back(cartesianToImage(bottomLeft));
+  return ret;
 }
 
 void setPixelColor(Mat img, const Point2f& pixelCoord, const Scalar& color) {
@@ -208,7 +220,7 @@ void readLidarData () {
       KF.correct(measurement);
       Point2f meanImpactImage = cartesianToImage(meanImpactInRoi);
       Point2f meanPredictedImpactImage = cartesianToImage(meanPredicted);
-      Rect roiImage = cartesianToImage(bicyleRoi);
+      vector<Point2f> roiImage = cartesianToImage(bicyleRoi);
 
       Point2f meanImpactGrid = cartesianToGrid(meanImpactInRoi);
       Point2f meanPredictedImpactGrid = cartesianToGrid(meanPredicted);
@@ -221,7 +233,7 @@ void readLidarData () {
 
       circle(left_display_img, meanImpactImage, 1, Scalar(255,0,0));
       circle(left_display_img, meanPredictedImpactImage, 1, Scalar(0,255,255));
-      rectangle(left_display_img, roiImage, Scalar(0,255,0));
+      polygon(left_display_img, roiImage, Scalar(0,255,0));
 
       if (validIndex(display_grid, meanImpactGrid)) {
         circle(display_grid, meanImpactGrid, 1, Scalar(255,0,0));

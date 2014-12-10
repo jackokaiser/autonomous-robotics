@@ -110,8 +110,8 @@ void readLidarData () {
                          0, 0, 1, 0,
                          0, 0, 0, 1);
   setIdentity(KF.measurementMatrix);
-  setIdentity(KF.processNoiseCov, Scalar::all(1e-5));
-  setIdentity(KF.measurementNoiseCov, Scalar::all(1e-1));
+  setIdentity(KF.processNoiseCov, Scalar::all(1e-1));
+  setIdentity(KF.measurementNoiseCov, Scalar::all(1e-5));
   setIdentity(KF.errorCovPost, Scalar::all(1));
   KF.statePost.at<float>(0,0) = meanImpactInRoi.x;
   KF.statePost.at<float>(0,1) = meanImpactInRoi.y;

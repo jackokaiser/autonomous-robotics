@@ -159,6 +159,12 @@ void readLidarData () {
       Point2f allImpactSum(0.,0.);
       unsigned int totalImpactInRoi = 0;
 
+
+      Mat prediction = KF.predict();
+      Point2f meanPredicted(prediction.at<float>(0,0),
+                            prediction.at<float>(0,1));
+      shiftRoi(bicyleRoi, meanPredicted);
+
       //  Process all the lidar impacts
       for (int i=0; i<nb_impacts/2; ++i)
         {
@@ -193,12 +199,7 @@ void readLidarData () {
       Point2f previousMeanImpact(meanImpactInRoi);
       float totalImpactInRoiInv = 1./totalImpactInRoi;
       meanImpactInRoi = allImpactSum * totalImpactInRoiInv;
-      shiftRoi(bicyleRoi, meanImpactInRoi);
 
-      Mat prediction = KF.predict();
-      Point2f meanPredicted(prediction.at<float>(0,0),
-                            prediction.at<float>(0,1));
-      Point2f speed = meanImpactInRoi - previousMeanImpact;
       Mat measurement = (Mat_<float>(2, 1) <<
                          meanImpactInRoi.x,
                          meanImpactInRoi.y);
@@ -217,10 +218,15 @@ void readLidarData () {
       grid.convertTo(display_grid, CV_8U, 255);
       cvtColor(display_grid, display_grid, CV_GRAY2RGB);
 
-      line(left_display_img, meanImpactImage, meanPredictedImpactImage, Scalar(255,0,0));
+      circle(left_display_img, meanImpactImage, 1, Scalar(255,0,0));
+      circle(left_display_img, meanPredictedImpactImage, 1, Scalar(0,255,255));
       rectangle(left_display_img, roiImage, Scalar(0,255,0));
-      if (validIndex(display_grid, meanImpactGrid) && validIndex(display_grid, meanPredictedImpactGrid)) {
-        line(display_grid, meanImpactGrid, meanPredictedImpactGrid, Scalar(255,0,0));
+
+      if (validIndex(display_grid, meanImpactGrid)) {
+        circle(display_grid, meanImpactGrid, 1, Scalar(255,0,0));
+      }
+      if(validIndex(display_grid, meanPredictedImpactGrid)) {
+        circle(display_grid, meanPredictedImpactGrid, 1, Scalar(0,255,255));
       }
       if (validIndex(display_grid, roiGrid.tl()) && validIndex(display_grid, roiGrid.br())) {
         rectangle(display_grid, roiGrid, Scalar(0,255,0));

@@ -16,12 +16,43 @@ Point2f computeMiddle (const Rect& r) {
   return Point2f((topLeft.x + bottomRight.x) / 2.,
                  (topLeft.y + bottomRight.y) / 2.);
 }
-
+bool validIndex(Mat img, Point2f p) {
+  return ((p.x>=0 && p.x<img.cols) &&
+    (p.y>=0 && p.y<img.rows));
+}
 void shiftRoi (Rect& roi, const Point2f& targetCenter) {
   Point2f currentCenter = computeMiddle(roi);
   Point2f shift = targetCenter - currentCenter;
   roi = roi + Point2i((int)shift.x, (int)shift.y);
 }
+Point2f cartesianToGrid (const Point2f& point) {
+  //  define the parameters of the grid
+  float x_min = -10.;
+  float x_max = 10.;
+  float y_min = 0;
+  float y_max = 30.;
+  float x_step = 0.2;
+  float y_step =  0.2;
+  int nb_cells_x = (x_max-x_min)/x_step;
+  int nb_cells_y = (y_max-y_min)/y_step;
+
+  if (point.x>x_min && point.x<x_max && point.y>y_min && point.y<y_max && point.y>0) {
+    return Point2f((point.x-x_min)/x_step, (y_max-(point.y-y_min))/y_step);
+  }
+  else {
+    return Point2f(-1,-1);
+  }
+}
+Rect cartesianToGrid (const Rect& rect) {
+  Point2f topLeft = rect.tl();
+  Point2f bottomRight = rect.br();
+
+  Point2f topLeftConverted = cartesianToGrid(topLeft);
+  Point2f bottomRightConverted = cartesianToGrid(bottomRight);
+
+  return Rect(topLeftConverted, bottomRightConverted);
+}
+
 Point2f cartesianToImage (const Point2f& point) {
   //  extrinsic parameters of the lidar
   double lidar_pitch_angle = -1.*M_PI/180;
@@ -141,8 +172,9 @@ void readLidarData () {
           }
 
           //  compute the grid
-          if (x>x_min && x<x_max && y>y_min && y<y_max && y>0)
+          if (x>x_min && x<x_max && y>y_min && y<y_max && y>0) {
             grid.at<float>((y_max-(y-y_min))/y_step, (x-x_min)/x_step) = 1.0;
+          }
 
           //  display on stereo image
           if ((y>0 && y<30) && (x>-10 && x<10))
@@ -164,7 +196,7 @@ void readLidarData () {
       shiftRoi(bicyleRoi, meanImpactInRoi);
 
       Mat prediction = KF.predict();
-      Point2f predictedMean(prediction.at<float>(0,0),
+      Point2f meanPredicted(prediction.at<float>(0,0),
                             prediction.at<float>(0,1));
       Point2f speed = meanImpactInRoi - previousMeanImpact;
       Mat measurement = (Mat_<float>(2, 1) <<
@@ -173,16 +205,26 @@ void readLidarData () {
 
       KF.correct(measurement);
       Point2f meanImpactImage = cartesianToImage(meanImpactInRoi);
-      Point2f meanPredictedImpactImage = cartesianToImage(predictedMean);
+      Point2f meanPredictedImpactImage = cartesianToImage(meanPredicted);
       Rect roiImage = cartesianToImage(bicyleRoi);
 
-      line(left_display_img, meanImpactImage, meanPredictedImpactImage, Scalar(255,255,255));
-      rectangle(left_display_img, roiImage, Scalar(0,255,0));
+      Point2f meanImpactGrid = cartesianToGrid(meanImpactInRoi);
+      Point2f meanPredictedImpactGrid = cartesianToGrid(meanPredicted);
+      Rect roiGrid = cartesianToGrid(bicyleRoi);
 
       //   prepare the display of the grid
       Mat display_grid; //  to have a RGB grid for display
       grid.convertTo(display_grid, CV_8U, 255);
       cvtColor(display_grid, display_grid, CV_GRAY2RGB);
+
+      line(left_display_img, meanImpactImage, meanPredictedImpactImage, Scalar(255,0,0));
+      rectangle(left_display_img, roiImage, Scalar(0,255,0));
+      if (validIndex(display_grid, meanImpactGrid) && validIndex(display_grid, meanPredictedImpactGrid)) {
+        line(display_grid, meanImpactGrid, meanPredictedImpactGrid, Scalar(255,0,0));
+      }
+      if (validIndex(display_grid, roiGrid.tl()) && validIndex(display_grid, roiGrid.br())) {
+        rectangle(display_grid, roiGrid, Scalar(0,255,0));
+      }
 
       Mat display_grid_large;// to have a large grid for display
       resize(display_grid, display_grid_large, Size(600,600));

@@ -1,51 +1,44 @@
-src/readLidarData.cpp: In function ‘cv::Point2f computeMiddle(const Rect&)’:
-src/readLidarData.cpp:13:25: error: call of overloaded ‘Point_(cv::Point_<int>)’ is ambiguous
-   Point2f topLeft(r.tl());
-                         ^
-src/readLidarData.cpp:13:25: note: candidates are:
-In file included from /usr/local/include/opencv2/opencv.hpp:47:0,
+src/readLidarData.cpp: In function ‘bool validIndex(cv::Mat, cv::Point2f)’:
+src/readLidarData.cpp:20:23: error: no match for ‘operator<’ (operand types are ‘cv::Point2f {aka cv::Point_<float>}’ and ‘int’)
+   return ((p.x>=0 && p<img.rows) &&
+                       ^
+src/readLidarData.cpp:20:23: note: candidates are:
+In file included from /usr/include/c++/4.8/utility:70:0,
+                 from /usr/include/c++/4.8/algorithm:60,
+                 from /usr/local/include/opencv2/core/core.hpp:56,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/core.hpp:745:5: note: cv::Point_<_Tp>::Point_(const CvPoint2D32f&) [with _Tp = float; CvPoint2D32f = CvPoint2D32f]
-     Point_(const CvPoint2D32f& pt);
+/usr/include/c++/4.8/bits/stl_pair.h:220:5: note: template<class _T1, class _T2> bool std::operator<(const std::pair<_T1, _T2>&, const std::pair<_T1, _T2>&)
+     operator<(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
      ^
-/usr/local/include/opencv2/core/core.hpp:744:5: note: cv::Point_<_Tp>::Point_(const CvPoint&) [with _Tp = float; CvPoint = CvPoint]
-     Point_(const CvPoint& pt);
-     ^
-/usr/local/include/opencv2/core/core.hpp:743:5: note: cv::Point_<_Tp>::Point_(const cv::Point_<_Tp>&) [with _Tp = float]
-     Point_(const Point_& pt);
-     ^
-src/readLidarData.cpp:14:29: error: call of overloaded ‘Point_(cv::Point_<int>)’ is ambiguous
-   Point2f bottomRight(r.br());
-                             ^
-src/readLidarData.cpp:14:29: note: candidates are:
-In file included from /usr/local/include/opencv2/opencv.hpp:47:0,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/core.hpp:745:5: note: cv::Point_<_Tp>::Point_(const CvPoint2D32f&) [with _Tp = float; CvPoint2D32f = CvPoint2D32f]
-     Point_(const CvPoint2D32f& pt);
-     ^
-/usr/local/include/opencv2/core/core.hpp:744:5: note: cv::Point_<_Tp>::Point_(const CvPoint&) [with _Tp = float; CvPoint = CvPoint]
-     Point_(const CvPoint& pt);
-     ^
-/usr/local/include/opencv2/core/core.hpp:743:5: note: cv::Point_<_Tp>::Point_(const cv::Point_<_Tp>&) [with _Tp = float]
-     Point_(const Point_& pt);
-     ^
-src/readLidarData.cpp: In function ‘void shiftRoi(cv::Rect&, const Point2f&)’:
-src/readLidarData.cpp:23:13: error: no match for ‘operator+’ (operand types are ‘cv::Rect’ and ‘cv::Point2f {aka cv::Point_<float>}’)
-   roi = roi + shift;
-             ^
-src/readLidarData.cpp:23:13: note: candidates are:
+/usr/include/c++/4.8/bits/stl_pair.h:220:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::pair<_T1, _T2>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/bits/stl_algobase.h:67:0,
                  from /usr/include/c++/4.8/algorithm:61,
                  from /usr/local/include/opencv2/core/core.hpp:56,
                  from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/stl_iterator.h:333:5: note: template<class _Iterator> std::reverse_iterator<_Iterator> std::operator+(typename std::reverse_iterator<_Iterator>::difference_type, const std::reverse_iterator<_Iterator>&)
-     operator+(typename reverse_iterator<_Iterator>::difference_type __n,
+/usr/include/c++/4.8/bits/stl_iterator.h:297:5: note: template<class _Iterator> bool std::operator<(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_Iterator>&)
+     operator<(const reverse_iterator<_Iterator>& __x,
      ^
-/usr/include/c++/4.8/bits/stl_iterator.h:333:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::reverse_iterator<_Iterator>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/bits/stl_iterator.h:297:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::reverse_iterator<_Iterator>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/bits/stl_algobase.h:67:0,
+                 from /usr/include/c++/4.8/algorithm:61,
+                 from /usr/local/include/opencv2/core/core.hpp:56,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_iterator.h:347:5: note: template<class _IteratorL, class _IteratorR> bool std::operator<(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_IteratorR>&)
+     operator<(const reverse_iterator<_IteratorL>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_iterator.h:347:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::reverse_iterator<_Iterator>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/string:52:0,
                  from /usr/include/c++/4.8/bits/locale_classes.h:40,
                  from /usr/include/c++/4.8/bits/ios_base.h:41,
@@ -56,47 +49,13 @@ In file included from /usr/include/c++/4.8/string:52:0,
                  from /usr/local/include/opencv2/core/core.hpp:59,
                  from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/basic_string.h:2365:5: note: template<class _CharT, class _Traits, class _Alloc> std::basic_string<_CharT, _Traits, _Alloc> std::operator+(const std::basic_string<_CharT, _Traits, _Alloc>&, const std::basic_string<_CharT, _Traits, _Alloc>&)
-     operator+(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+/usr/include/c++/4.8/bits/basic_string.h:2569:5: note: template<class _CharT, class _Traits, class _Alloc> bool std::operator<(const std::basic_string<_CharT, _Traits, _Alloc>&, const std::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
      ^
-/usr/include/c++/4.8/bits/basic_string.h:2365:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::basic_string<_CharT, _Traits, _Alloc>’
-   roi = roi + shift;
-               ^
-In file included from /usr/include/c++/4.8/string:53:0,
-                 from /usr/include/c++/4.8/bits/locale_classes.h:40,
-                 from /usr/include/c++/4.8/bits/ios_base.h:41,
-                 from /usr/include/c++/4.8/ios:42,
-                 from /usr/include/c++/4.8/istream:38,
-                 from /usr/include/c++/4.8/sstream:38,
-                 from /usr/include/c++/4.8/complex:45,
-                 from /usr/local/include/opencv2/core/core.hpp:59,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/basic_string.tcc:692:5: note: template<class _CharT, class _Traits, class _Alloc> std::basic_string<_CharT, _Traits, _Alloc> std::operator+(const _CharT*, const std::basic_string<_CharT, _Traits, _Alloc>&)
-     operator+(const _CharT* __lhs,
-     ^
-/usr/include/c++/4.8/bits/basic_string.tcc:692:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   mismatched types ‘const _CharT*’ and ‘cv::Rect_<int>’
-   roi = roi + shift;
-               ^
-In file included from /usr/include/c++/4.8/string:53:0,
-                 from /usr/include/c++/4.8/bits/locale_classes.h:40,
-                 from /usr/include/c++/4.8/bits/ios_base.h:41,
-                 from /usr/include/c++/4.8/ios:42,
-                 from /usr/include/c++/4.8/istream:38,
-                 from /usr/include/c++/4.8/sstream:38,
-                 from /usr/include/c++/4.8/complex:45,
-                 from /usr/local/include/opencv2/core/core.hpp:59,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/basic_string.tcc:708:5: note: template<class _CharT, class _Traits, class _Alloc> std::basic_string<_CharT, _Traits, _Alloc> std::operator+(_CharT, const std::basic_string<_CharT, _Traits, _Alloc>&)
-     operator+(_CharT __lhs, const basic_string<_CharT, _Traits, _Alloc>& __rhs)
-     ^
-/usr/include/c++/4.8/bits/basic_string.tcc:708:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::basic_string<_CharT, _Traits, _Alloc>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/bits/basic_string.h:2569:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::basic_string<_CharT, _Traits, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/string:52:0,
                  from /usr/include/c++/4.8/bits/locale_classes.h:40,
                  from /usr/include/c++/4.8/bits/ios_base.h:41,
@@ -107,13 +66,13 @@ In file included from /usr/include/c++/4.8/string:52:0,
                  from /usr/local/include/opencv2/core/core.hpp:59,
                  from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/basic_string.h:2402:5: note: template<class _CharT, class _Traits, class _Alloc> std::basic_string<_CharT, _Traits, _Alloc> std::operator+(const std::basic_string<_CharT, _Traits, _Alloc>&, const _CharT*)
-     operator+(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+/usr/include/c++/4.8/bits/basic_string.h:2581:5: note: template<class _CharT, class _Traits, class _Alloc> bool std::operator<(const std::basic_string<_CharT, _Traits, _Alloc>&, const _CharT*)
+     operator<(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
      ^
-/usr/include/c++/4.8/bits/basic_string.h:2402:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::basic_string<_CharT, _Traits, _Alloc>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/bits/basic_string.h:2581:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::basic_string<_CharT, _Traits, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/string:52:0,
                  from /usr/include/c++/4.8/bits/locale_classes.h:40,
                  from /usr/include/c++/4.8/bits/ios_base.h:41,
@@ -124,368 +83,581 @@ In file included from /usr/include/c++/4.8/string:52:0,
                  from /usr/local/include/opencv2/core/core.hpp:59,
                  from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/basic_string.h:2418:5: note: template<class _CharT, class _Traits, class _Alloc> std::basic_string<_CharT, _Traits, _Alloc> std::operator+(const std::basic_string<_CharT, _Traits, _Alloc>&, _CharT)
-     operator+(const basic_string<_CharT, _Traits, _Alloc>& __lhs, _CharT __rhs)
+/usr/include/c++/4.8/bits/basic_string.h:2593:5: note: template<class _CharT, class _Traits, class _Alloc> bool std::operator<(const _CharT*, const std::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<(const _CharT* __lhs,
      ^
-/usr/include/c++/4.8/bits/basic_string.h:2418:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::basic_string<_CharT, _Traits, _Alloc>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:59:0,
+/usr/include/c++/4.8/bits/basic_string.h:2593:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   mismatched types ‘const _CharT*’ and ‘cv::Point_<float>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/map:60:0,
+                 from /usr/local/include/opencv2/core/core.hpp:60,
                  from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/complex:324:5: note: template<class _Tp> std::complex<_Tp> std::operator+(const std::complex<_Tp>&, const std::complex<_Tp>&)
-     operator+(const complex<_Tp>& __x, const complex<_Tp>& __y)
+/usr/include/c++/4.8/bits/stl_tree.h:917:5: note: template<class _Key, class _Val, class _KeyOfValue, class _Compare, class _Alloc> bool std::operator<(const std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>&, const std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>&)
+     operator<(const _Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>& __x,
      ^
-/usr/include/c++/4.8/complex:324:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::complex<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:59:0,
+/usr/include/c++/4.8/bits/stl_tree.h:917:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/map:61:0,
+                 from /usr/local/include/opencv2/core/core.hpp:60,
                  from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/complex:333:5: note: template<class _Tp> std::complex<_Tp> std::operator+(const std::complex<_Tp>&, const _Tp&)
-     operator+(const complex<_Tp>& __x, const _Tp& __y)
+/usr/include/c++/4.8/bits/stl_map.h:979:5: note: template<class _Key, class _Tp, class _Compare, class _Alloc> bool std::operator<(const std::map<_Key, _Tp, _Compare, _Alloc>&, const std::map<_Key, _Tp, _Compare, _Alloc>&)
+     operator<(const map<_Key, _Tp, _Compare, _Alloc>& __x,
      ^
-/usr/include/c++/4.8/complex:333:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::complex<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:59:0,
+/usr/include/c++/4.8/bits/stl_map.h:979:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::map<_Key, _Tp, _Compare, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/map:62:0,
+                 from /usr/local/include/opencv2/core/core.hpp:60,
                  from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/complex:342:5: note: template<class _Tp> std::complex<_Tp> std::operator+(const _Tp&, const std::complex<_Tp>&)
-     operator+(const _Tp& __x, const complex<_Tp>& __y)
+/usr/include/c++/4.8/bits/stl_multimap.h:881:5: note: template<class _Key, class _Tp, class _Compare, class _Alloc> bool std::operator<(const std::multimap<_Key, _Tp, _Compare, _Alloc>&, const std::multimap<_Key, _Tp, _Compare, _Alloc>&)
+     operator<(const multimap<_Key, _Tp, _Compare, _Alloc>& __x,
      ^
-/usr/include/c++/4.8/complex:342:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::complex<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:59:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/complex:443:5: note: template<class _Tp> std::complex<_Tp> std::operator+(const std::complex<_Tp>&)
-     operator+(const complex<_Tp>& __x)
-     ^
-/usr/include/c++/4.8/complex:443:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::complex<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/include/c++/4.8/vector:65:0,
+/usr/include/c++/4.8/bits/stl_multimap.h:881:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::multimap<_Key, _Tp, _Compare, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/vector:64:0,
                  from /usr/local/include/opencv2/core/core.hpp:63,
                  from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/stl_bvector.h:293:3: note: std::_Bit_iterator std::operator+(std::ptrdiff_t, const std::_Bit_iterator&)
-   operator+(ptrdiff_t __n, const _Bit_iterator& __x)
-   ^
-/usr/include/c++/4.8/bits/stl_bvector.h:293:3: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘std::ptrdiff_t {aka long int}’
-/usr/include/c++/4.8/bits/stl_bvector.h:379:3: note: std::_Bit_const_iterator std::operator+(std::ptrdiff_t, const std::_Bit_const_iterator&)
-   operator+(ptrdiff_t __n, const _Bit_const_iterator& __x)
-   ^
-/usr/include/c++/4.8/bits/stl_bvector.h:379:3: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘std::ptrdiff_t {aka long int}’
+/usr/include/c++/4.8/bits/stl_vector.h:1421:5: note: template<class _Tp, class _Alloc> bool std::operator<(const std::vector<_Tp, _Alloc>&, const std::vector<_Tp, _Alloc>&)
+     operator<(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+     ^
+/usr/include/c++/4.8/bits/stl_vector.h:1421:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::vector<_Tp, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/list:63:0,
+                 from /usr/local/include/opencv2/video/background_segm.hpp:47,
+                 from /usr/local/include/opencv2/video/video.hpp:47,
+                 from /usr/local/include/opencv2/opencv.hpp:52,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_list.h:1631:5: note: template<class _Tp, class _Alloc> bool std::operator<(const std::list<_Tp, _Alloc>&, const std::list<_Tp, _Alloc>&)
+     operator<(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+     ^
+/usr/include/c++/4.8/bits/stl_list.h:1631:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::list<_Tp, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/deque:64:0,
                  from /usr/local/include/opencv2/objdetect/objdetect.hpp:50,
                  from /usr/local/include/opencv2/opencv.hpp:54,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/stl_deque.h:354:5: note: template<class _Tp, class _Ref, class _Ptr> std::_Deque_iterator<_Tp, _Ref, _Ptr> std::operator+(std::ptrdiff_t, const std::_Deque_iterator<_Tp, _Ref, _Ptr>&)
-     operator+(ptrdiff_t __n, const _Deque_iterator<_Tp, _Ref, _Ptr>& __x)
+/usr/include/c++/4.8/bits/stl_deque.h:273:5: note: template<class _Tp, class _Ref, class _Ptr> bool std::operator<(const std::_Deque_iterator<_Tp, _Ref, _Ptr>&, const std::_Deque_iterator<_Tp, _Ref, _Ptr>&)
+     operator<(const _Deque_iterator<_Tp, _Ref, _Ptr>& __x,
      ^
-/usr/include/c++/4.8/bits/stl_deque.h:354:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   cannot convert ‘roi’ (type ‘cv::Rect’) to type ‘std::ptrdiff_t {aka long int}’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/bits/stl_deque.h:273:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Deque_iterator<_Tp, _Ref, _Ptr>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/deque:64:0,
+                 from /usr/local/include/opencv2/objdetect/objdetect.hpp:50,
+                 from /usr/local/include/opencv2/opencv.hpp:54,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_deque.h:281:5: note: template<class _Tp, class _RefL, class _PtrL, class _RefR, class _PtrR> bool std::operator<(const std::_Deque_iterator<_Tp, _Ref, _Ptr>&, const std::_Deque_iterator<_Tp, _RefR, _PtrR>&)
+     operator<(const _Deque_iterator<_Tp, _RefL, _PtrL>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_deque.h:281:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Deque_iterator<_Tp, _Ref, _Ptr>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/deque:64:0,
+                 from /usr/local/include/opencv2/objdetect/objdetect.hpp:50,
+                 from /usr/local/include/opencv2/opencv.hpp:54,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_deque.h:1975:5: note: template<class _Tp, class _Alloc> bool std::operator<(const std::deque<_Tp, _Alloc>&, const std::deque<_Tp, _Alloc>&)
+     operator<(const deque<_Tp, _Alloc>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_deque.h:1975:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::deque<_Tp, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/valarray:587:0,
                  from /usr/local/include/opencv2/contrib/retina.hpp:76,
                  from /usr/local/include/opencv2/contrib/contrib.hpp:987,
                  from /usr/local/include/opencv2/opencv.hpp:59,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note: template<class _Dom1, class _Dom2> std::_Expr<std::_BinClos<std::__plus, std::_Expr, std::_Expr, _Dom1, _Dom2>, typename std::__fun<std::__plus, typename _Dom1::value_type>::result_type> std::operator+(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const std::_Expr<_Dom2, typename _Dom2::value_type>&)
-     _DEFINE_EXPR_BINARY_OPERATOR(+, __plus)
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom1, class _Dom2> std::_Expr<std::_BinClos<std::__less, std::_Expr, std::_Expr, _Dom1, _Dom2>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const std::_Expr<_Dom2, typename _Dom2::value_type>&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
      ^
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/valarray:587:0,
                  from /usr/local/include/opencv2/contrib/retina.hpp:76,
                  from /usr/local/include/opencv2/contrib/contrib.hpp:987,
                  from /usr/local/include/opencv2/opencv.hpp:59,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__plus, std::_Expr, std::_Constant, _Dom, typename _Dom::value_type>, typename std::__fun<std::__plus, typename _Dom1::value_type>::result_type> std::operator+(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const typename _Dom::value_type&)
-     _DEFINE_EXPR_BINARY_OPERATOR(+, __plus)
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__less, std::_Expr, std::_Constant, _Dom, typename _Dom::value_type>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const typename _Dom::value_type&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
      ^
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/valarray:587:0,
                  from /usr/local/include/opencv2/contrib/retina.hpp:76,
                  from /usr/local/include/opencv2/contrib/contrib.hpp:987,
                  from /usr/local/include/opencv2/opencv.hpp:59,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__plus, std::_Constant, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__plus, typename _Dom1::value_type>::result_type> std::operator+(const typename _Dom::value_type&, const std::_Expr<_Dom1, typename _Dom1::value_type>&)
-     _DEFINE_EXPR_BINARY_OPERATOR(+, __plus)
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__less, std::_Constant, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const typename _Dom::value_type&, const std::_Expr<_Dom1, typename _Dom1::value_type>&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
      ^
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   mismatched types ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’ and ‘int’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/valarray:587:0,
                  from /usr/local/include/opencv2/contrib/retina.hpp:76,
                  from /usr/local/include/opencv2/contrib/contrib.hpp:987,
                  from /usr/local/include/opencv2/opencv.hpp:59,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__plus, std::_Expr, std::_ValArray, _Dom, typename _Dom::value_type>, typename std::__fun<std::__plus, typename _Dom1::value_type>::result_type> std::operator+(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const std::valarray<typename _Dom::value_type>&)
-     _DEFINE_EXPR_BINARY_OPERATOR(+, __plus)
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__less, std::_Expr, std::_ValArray, _Dom, typename _Dom::value_type>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const std::valarray<typename _Dom::value_type>&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
      ^
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/include/c++/4.8/valarray:587:0,
                  from /usr/local/include/opencv2/contrib/retina.hpp:76,
                  from /usr/local/include/opencv2/contrib/contrib.hpp:987,
                  from /usr/local/include/opencv2/opencv.hpp:59,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__plus, std::_ValArray, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__plus, typename _Dom1::value_type>::result_type> std::operator+(const std::valarray<typename _Dom::value_type>&, const std::_Expr<_Dom1, typename _Dom1::value_type>&)
-     _DEFINE_EXPR_BINARY_OPERATOR(+, __plus)
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__less, std::_ValArray, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const std::valarray<typename _Dom::value_type>&, const std::_Expr<_Dom1, typename _Dom1::value_type>&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
      ^
-/usr/include/c++/4.8/bits/valarray_after.h:402:5: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::valarray<typename _Dom::value_type>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::valarray<typename _Dom::value_type>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/local/include/opencv2/contrib/retina.hpp:76:0,
                  from /usr/local/include/opencv2/contrib/contrib.hpp:987,
                  from /usr/local/include/opencv2/opencv.hpp:59,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/valarray:1167:1: note: template<class _Tp> std::_Expr<std::_BinClos<std::__plus, std::_ValArray, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__plus, _Tp>::result_type> std::operator+(const std::valarray<_Tp>&, const std::valarray<_Tp>&)
- _DEFINE_BINARY_OPERATOR(+, __plus)
+/usr/include/c++/4.8/valarray:1181:1: note: template<class _Tp> std::_Expr<std::_BinClos<std::__less, std::_ValArray, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__less, _Tp>::result_type> std::operator<(const std::valarray<_Tp>&, const std::valarray<_Tp>&)
+ _DEFINE_BINARY_OPERATOR(<, __less)
  ^
-/usr/include/c++/4.8/valarray:1167:1: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::valarray<_Tp>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/valarray:1181:1: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::valarray<_Tp>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/local/include/opencv2/contrib/retina.hpp:76:0,
                  from /usr/local/include/opencv2/contrib/contrib.hpp:987,
                  from /usr/local/include/opencv2/opencv.hpp:59,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/valarray:1167:1: note: template<class _Tp> std::_Expr<std::_BinClos<std::__plus, std::_ValArray, std::_Constant, _Tp, _Tp>, typename std::__fun<std::__plus, _Tp>::result_type> std::operator+(const std::valarray<_Tp>&, const _Tp&)
- _DEFINE_BINARY_OPERATOR(+, __plus)
+/usr/include/c++/4.8/valarray:1181:1: note: template<class _Tp> std::_Expr<std::_BinClos<std::__less, std::_ValArray, std::_Constant, _Tp, _Tp>, typename std::__fun<std::__less, _Tp>::result_type> std::operator<(const std::valarray<_Tp>&, const _Tp&)
+ _DEFINE_BINARY_OPERATOR(<, __less)
  ^
-/usr/include/c++/4.8/valarray:1167:1: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const std::valarray<_Tp>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/valarray:1181:1: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::valarray<_Tp>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/local/include/opencv2/contrib/retina.hpp:76:0,
                  from /usr/local/include/opencv2/contrib/contrib.hpp:987,
                  from /usr/local/include/opencv2/opencv.hpp:59,
                  from src/readLidarData.cpp:1:
-/usr/include/c++/4.8/valarray:1167:1: note: template<class _Tp> std::_Expr<std::_BinClos<std::__plus, std::_Constant, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__plus, _Tp>::result_type> std::operator+(const _Tp&, const std::valarray<_Tp>&)
- _DEFINE_BINARY_OPERATOR(+, __plus)
+/usr/include/c++/4.8/valarray:1181:1: note: template<class _Tp> std::_Expr<std::_BinClos<std::__less, std::_Constant, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__less, _Tp>::result_type> std::operator<(const _Tp&, const std::valarray<_Tp>&)
+ _DEFINE_BINARY_OPERATOR(<, __less)
  ^
-/usr/include/c++/4.8/valarray:1167:1: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::valarray<_Tp>’
-   roi = roi + shift;
-               ^
+/usr/include/c++/4.8/valarray:1181:1: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   mismatched types ‘const std::valarray<_Tp>’ and ‘int’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/set:61:0,
+                 from /usr/local/include/opencv2/contrib/openfabmap.hpp:61,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:989,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_set.h:771:5: note: template<class _Key, class _Compare, class _Alloc> bool std::operator<(const std::set<_Key, _Compare, _Alloc>&, const std::set<_Key, _Compare, _Alloc>&)
+     operator<(const set<_Key, _Compare, _Alloc>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_set.h:771:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::set<_Key, _Compare, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
+In file included from /usr/include/c++/4.8/set:62:0,
+                 from /usr/local/include/opencv2/contrib/openfabmap.hpp:61,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:989,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_multiset.h:756:5: note: template<class _Key, class _Compare, class _Alloc> bool std::operator<(const std::multiset<_Key, _Compare, _Alloc>&, const std::multiset<_Key, _Compare, _Alloc>&)
+     operator<(const multiset<_Key, _Compare, _Alloc>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_multiset.h:756:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:20:28: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::multiset<_Key, _Compare, _Alloc>’
+   return ((p.x>=0 && p<img.rows) &&
+                            ^
 In file included from /usr/local/include/opencv2/core/core.hpp:4861:0,
                  from /usr/local/include/opencv2/opencv.hpp:47,
                  from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/mat.hpp:2033:1: note: template<class _Tp> cv::MatIterator_<_Tp> cv::operator+(std::ptrdiff_t, const cv::MatIterator_<_Tp>&)
- operator + (ptrdiff_t ofs, const MatIterator_<_Tp>& a)
+/usr/local/include/opencv2/core/mat.hpp:1984:1: note: bool cv::operator<(const cv::MatConstIterator&, const cv::MatConstIterator&)
+ operator < (const MatConstIterator& a, const MatConstIterator& b)
  ^
-/usr/local/include/opencv2/core/mat.hpp:2033:1: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   cannot convert ‘roi’ (type ‘cv::Rect’) to type ‘std::ptrdiff_t {aka long int}’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4861:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/mat.hpp:2029:1: note: template<class _Tp> cv::MatIterator_<_Tp> cv::operator+(const cv::MatIterator_<_Tp>&, std::ptrdiff_t)
- operator + (const MatIterator_<_Tp>& a, ptrdiff_t ofs)
- ^
-/usr/local/include/opencv2/core/mat.hpp:2029:1: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::MatIterator_<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4861:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/mat.hpp:2015:1: note: template<class _Tp> cv::MatConstIterator_<_Tp> cv::operator+(std::ptrdiff_t, const cv::MatConstIterator_<_Tp>&)
- operator + (ptrdiff_t ofs, const MatConstIterator_<_Tp>& a)
- ^
-/usr/local/include/opencv2/core/mat.hpp:2015:1: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   cannot convert ‘roi’ (type ‘cv::Rect’) to type ‘std::ptrdiff_t {aka long int}’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4861:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/mat.hpp:2011:1: note: template<class _Tp> cv::MatConstIterator_<_Tp> cv::operator+(const cv::MatConstIterator_<_Tp>&, std::ptrdiff_t)
- operator + (const MatConstIterator_<_Tp>& a, ptrdiff_t ofs)
- ^
-/usr/local/include/opencv2/core/mat.hpp:2011:1: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::MatConstIterator_<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4861:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/mat.hpp:2004:32: note: cv::MatConstIterator cv::operator+(std::ptrdiff_t, const cv::MatConstIterator&)
- static inline MatConstIterator operator + (ptrdiff_t ofs, const MatConstIterator& a)
-                                ^
-/usr/local/include/opencv2/core/mat.hpp:2004:32: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘std::ptrdiff_t {aka long int}’
-/usr/local/include/opencv2/core/mat.hpp:2001:32: note: cv::MatConstIterator cv::operator+(const cv::MatConstIterator&, std::ptrdiff_t)
- static inline MatConstIterator operator + (const MatConstIterator& a, ptrdiff_t ofs)
-                                ^
-/usr/local/include/opencv2/core/mat.hpp:2001:32: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const cv::MatConstIterator&’
-/usr/local/include/opencv2/core/mat.hpp:1271:20: note: cv::MatExpr cv::operator+(const cv::MatExpr&, const cv::MatExpr&)
- CV_EXPORTS MatExpr operator + (const MatExpr& e1, const MatExpr& e2);
+/usr/local/include/opencv2/core/mat.hpp:1984:1: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘const cv::MatConstIterator&’
+/usr/local/include/opencv2/core/mat.hpp:1305:20: note: cv::MatExpr cv::operator<(double, const cv::Mat&)
+ CV_EXPORTS MatExpr operator < (double s, const Mat& a);
                     ^
-/usr/local/include/opencv2/core/mat.hpp:1271:20: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const cv::MatExpr&’
-/usr/local/include/opencv2/core/mat.hpp:1270:20: note: cv::MatExpr cv::operator+(const Scalar&, const cv::MatExpr&)
- CV_EXPORTS MatExpr operator + (const Scalar& s, const MatExpr& e);
+/usr/local/include/opencv2/core/mat.hpp:1305:20: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘double’
+/usr/local/include/opencv2/core/mat.hpp:1304:20: note: cv::MatExpr cv::operator<(const cv::Mat&, double)
+ CV_EXPORTS MatExpr operator < (const Mat& a, double s);
                     ^
-/usr/local/include/opencv2/core/mat.hpp:1270:20: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const Scalar& {aka const cv::Scalar_<double>&}’
-/usr/local/include/opencv2/core/mat.hpp:1269:20: note: cv::MatExpr cv::operator+(const cv::MatExpr&, const Scalar&)
- CV_EXPORTS MatExpr operator + (const MatExpr& e, const Scalar& s);
+/usr/local/include/opencv2/core/mat.hpp:1304:20: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘const cv::Mat&’
+/usr/local/include/opencv2/core/mat.hpp:1303:20: note: cv::MatExpr cv::operator<(const cv::Mat&, const cv::Mat&)
+ CV_EXPORTS MatExpr operator < (const Mat& a, const Mat& b);
                     ^
-/usr/local/include/opencv2/core/mat.hpp:1269:20: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const cv::MatExpr&’
-/usr/local/include/opencv2/core/mat.hpp:1268:20: note: cv::MatExpr cv::operator+(const cv::Mat&, const cv::MatExpr&)
- CV_EXPORTS MatExpr operator + (const Mat& m, const MatExpr& e);
+/usr/local/include/opencv2/core/mat.hpp:1303:20: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘const cv::Mat&’
+In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/local/include/opencv2/core/operations.hpp:3193:20: note: bool cv::operator<(const cv::FileNodeIterator&, const cv::FileNodeIterator&)
+ static inline bool operator < (const FileNodeIterator& it1, const FileNodeIterator& it2)
                     ^
-/usr/local/include/opencv2/core/mat.hpp:1268:20: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const cv::Mat&’
-/usr/local/include/opencv2/core/mat.hpp:1267:20: note: cv::MatExpr cv::operator+(const cv::MatExpr&, const cv::Mat&)
- CV_EXPORTS MatExpr operator + (const MatExpr& e, const Mat& m);
-                    ^
-/usr/local/include/opencv2/core/mat.hpp:1267:20: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const cv::MatExpr&’
-/usr/local/include/opencv2/core/mat.hpp:1266:20: note: cv::MatExpr cv::operator+(const Scalar&, const cv::Mat&)
- CV_EXPORTS MatExpr operator + (const Scalar& s, const Mat& a);
-                    ^
-/usr/local/include/opencv2/core/mat.hpp:1266:20: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const Scalar& {aka const cv::Scalar_<double>&}’
-/usr/local/include/opencv2/core/mat.hpp:1265:20: note: cv::MatExpr cv::operator+(const cv::Mat&, const Scalar&)
- CV_EXPORTS MatExpr operator + (const Mat& a, const Scalar& s);
-                    ^
-/usr/local/include/opencv2/core/mat.hpp:1265:20: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const cv::Mat&’
-/usr/local/include/opencv2/core/mat.hpp:1264:20: note: cv::MatExpr cv::operator+(const cv::Mat&, const cv::Mat&)
- CV_EXPORTS MatExpr operator + (const Mat& a, const Mat& b);
-                    ^
-/usr/local/include/opencv2/core/mat.hpp:1264:20: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const cv::Mat&’
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:2248:21: note: cv::Range cv::operator+(int, const cv::Range&)
- static inline Range operator + (int delta, const Range& r1)
-                     ^
-/usr/local/include/opencv2/core/operations.hpp:2248:21: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘int’
-/usr/local/include/opencv2/core/operations.hpp:2243:21: note: cv::Range cv::operator+(const cv::Range&, int)
- static inline Range operator + (const Range& r1, int delta)
-                     ^
-/usr/local/include/opencv2/core/operations.hpp:2243:21: note:   no known conversion for argument 1 from ‘cv::Rect’ to ‘const cv::Range&’
-/usr/local/include/opencv2/core/operations.hpp:2092:51: note: template<class _Tp> cv::Scalar_<_Tp> cv::operator+(const cv::Scalar_<_Tp>&, const cv::Scalar_<_Tp>&)
- template<typename _Tp> static inline Scalar_<_Tp> operator + (const Scalar_<_Tp>& a, const Scalar_<_Tp>& b)
-                                                   ^
-/usr/local/include/opencv2/core/operations.hpp:2092:51: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::Scalar_<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:1980:49: note: template<class _Tp> cv::Rect_<_Tp> cv::operator+(const cv::Rect_<_Tp>&, const cv::Size_<_Tp>&)
- template<typename _Tp> static inline Rect_<_Tp> operator + (const Rect_<_Tp>& a, const Size_<_Tp>& b)
-                                                 ^
-/usr/local/include/opencv2/core/operations.hpp:1980:49: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const cv::Size_<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:1970:49: note: template<class _Tp> cv::Rect_<_Tp> cv::operator+(const cv::Rect_<_Tp>&, const cv::Point_<_Tp>&)
- template<typename _Tp> static inline Rect_<_Tp> operator + (const Rect_<_Tp>& a, const Point_<_Tp>& b)
-                                                 ^
-/usr/local/include/opencv2/core/operations.hpp:1970:49: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   deduced conflicting types for parameter ‘_Tp’ (‘int’ and ‘float’)
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:1880:49: note: template<class _Tp> cv::Size_<_Tp> cv::operator+(const cv::Size_<_Tp>&, const cv::Size_<_Tp>&)
- template<typename _Tp> static inline Size_<_Tp> operator + (const Size_<_Tp>& a, const Size_<_Tp>& b)
-                                                 ^
-/usr/local/include/opencv2/core/operations.hpp:1880:49: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::Size_<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:1810:51: note: template<class _Tp> cv::Point3_<_Tp> cv::operator+(const cv::Point3_<_Tp>&, const cv::Point3_<_Tp>&)
- template<typename _Tp> static inline Point3_<_Tp> operator + (const Point3_<_Tp>& a, const Point3_<_Tp>& b)
-                                                   ^
-/usr/local/include/opencv2/core/operations.hpp:1810:51: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::Point3_<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:1697:50: note: template<class _Tp> cv::Point_<_Tp> cv::operator+(const cv::Point_<_Tp>&, const cv::Point_<_Tp>&)
- template<typename _Tp> static inline Point_<_Tp> operator + (const Point_<_Tp>& a, const Point_<_Tp>& b)
-                                                  ^
-/usr/local/include/opencv2/core/operations.hpp:1697:50: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::Point_<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:1561:14: note: template<class _Tp> cv::Complex<_Tp> cv::operator+(_Tp, const cv::Complex<_Tp>&)
- Complex<_Tp> operator + (_Tp b, const Complex<_Tp>& a)
-              ^
-/usr/local/include/opencv2/core/operations.hpp:1561:14: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const cv::Complex<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:1553:14: note: template<class _Tp> cv::Complex<_Tp> cv::operator+(const cv::Complex<_Tp>&, _Tp)
- Complex<_Tp> operator + (const Complex<_Tp>& a, _Tp b)
-              ^
-/usr/local/include/opencv2/core/operations.hpp:1553:14: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::Complex<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:1521:14: note: template<class _Tp> cv::Complex<_Tp> cv::operator+(const cv::Complex<_Tp>&, const cv::Complex<_Tp>&)
- Complex<_Tp> operator + (const Complex<_Tp>& a, const Complex<_Tp>& b)
-              ^
-/usr/local/include/opencv2/core/operations.hpp:1521:14: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::Complex<_Tp>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:1318:1: note: template<class _Tp, int cn> cv::Vec<_Tp, m> cv::operator+(const cv::Vec<_Tp, m>&, const cv::Vec<_Tp, m>&)
- operator + (const Vec<_Tp, cn>& a, const Vec<_Tp, cn>& b)
- ^
-/usr/local/include/opencv2/core/operations.hpp:1318:1: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::Vec<_Tp, m>’
-   roi = roi + shift;
-               ^
-In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
-                 from /usr/local/include/opencv2/opencv.hpp:47,
-                 from src/readLidarData.cpp:1:
-/usr/local/include/opencv2/core/operations.hpp:561:17: note: template<class _Tp, int m, int n> cv::Matx<_Tp, m, n> cv::operator+(const cv::Matx<_Tp, m, n>&, const cv::Matx<_Tp, m, n>&)
- Matx<_Tp, m, n> operator + (const Matx<_Tp, m, n>& a, const Matx<_Tp, m, n>& b)
+/usr/local/include/opencv2/core/operations.hpp:3193:20: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘const cv::FileNodeIterator&’
+src/readLidarData.cpp:21:17: error: no match for ‘operator<’ (operand types are ‘cv::Point2f {aka cv::Point_<float>}’ and ‘int’)
+     (p.y>=0 && p<img.cols));
                  ^
-/usr/local/include/opencv2/core/operations.hpp:561:17: note:   template argument deduction/substitution failed:
-src/readLidarData.cpp:23:15: note:   ‘cv::Rect’ is not derived from ‘const cv::Matx<_Tp, m, n>’
-   roi = roi + shift;
-               ^
+src/readLidarData.cpp:21:17: note: candidates are:
+In file included from /usr/include/c++/4.8/utility:70:0,
+                 from /usr/include/c++/4.8/algorithm:60,
+                 from /usr/local/include/opencv2/core/core.hpp:56,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_pair.h:220:5: note: template<class _T1, class _T2> bool std::operator<(const std::pair<_T1, _T2>&, const std::pair<_T1, _T2>&)
+     operator<(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+     ^
+/usr/include/c++/4.8/bits/stl_pair.h:220:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::pair<_T1, _T2>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/bits/stl_algobase.h:67:0,
+                 from /usr/include/c++/4.8/algorithm:61,
+                 from /usr/local/include/opencv2/core/core.hpp:56,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_iterator.h:297:5: note: template<class _Iterator> bool std::operator<(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_Iterator>&)
+     operator<(const reverse_iterator<_Iterator>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_iterator.h:297:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::reverse_iterator<_Iterator>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/bits/stl_algobase.h:67:0,
+                 from /usr/include/c++/4.8/algorithm:61,
+                 from /usr/local/include/opencv2/core/core.hpp:56,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_iterator.h:347:5: note: template<class _IteratorL, class _IteratorR> bool std::operator<(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_IteratorR>&)
+     operator<(const reverse_iterator<_IteratorL>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_iterator.h:347:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::reverse_iterator<_Iterator>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/string:52:0,
+                 from /usr/include/c++/4.8/bits/locale_classes.h:40,
+                 from /usr/include/c++/4.8/bits/ios_base.h:41,
+                 from /usr/include/c++/4.8/ios:42,
+                 from /usr/include/c++/4.8/istream:38,
+                 from /usr/include/c++/4.8/sstream:38,
+                 from /usr/include/c++/4.8/complex:45,
+                 from /usr/local/include/opencv2/core/core.hpp:59,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/basic_string.h:2569:5: note: template<class _CharT, class _Traits, class _Alloc> bool std::operator<(const std::basic_string<_CharT, _Traits, _Alloc>&, const std::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+     ^
+/usr/include/c++/4.8/bits/basic_string.h:2569:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::basic_string<_CharT, _Traits, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/string:52:0,
+                 from /usr/include/c++/4.8/bits/locale_classes.h:40,
+                 from /usr/include/c++/4.8/bits/ios_base.h:41,
+                 from /usr/include/c++/4.8/ios:42,
+                 from /usr/include/c++/4.8/istream:38,
+                 from /usr/include/c++/4.8/sstream:38,
+                 from /usr/include/c++/4.8/complex:45,
+                 from /usr/local/include/opencv2/core/core.hpp:59,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/basic_string.h:2581:5: note: template<class _CharT, class _Traits, class _Alloc> bool std::operator<(const std::basic_string<_CharT, _Traits, _Alloc>&, const _CharT*)
+     operator<(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+     ^
+/usr/include/c++/4.8/bits/basic_string.h:2581:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::basic_string<_CharT, _Traits, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/string:52:0,
+                 from /usr/include/c++/4.8/bits/locale_classes.h:40,
+                 from /usr/include/c++/4.8/bits/ios_base.h:41,
+                 from /usr/include/c++/4.8/ios:42,
+                 from /usr/include/c++/4.8/istream:38,
+                 from /usr/include/c++/4.8/sstream:38,
+                 from /usr/include/c++/4.8/complex:45,
+                 from /usr/local/include/opencv2/core/core.hpp:59,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/basic_string.h:2593:5: note: template<class _CharT, class _Traits, class _Alloc> bool std::operator<(const _CharT*, const std::basic_string<_CharT, _Traits, _Alloc>&)
+     operator<(const _CharT* __lhs,
+     ^
+/usr/include/c++/4.8/bits/basic_string.h:2593:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   mismatched types ‘const _CharT*’ and ‘cv::Point_<float>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/map:60:0,
+                 from /usr/local/include/opencv2/core/core.hpp:60,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_tree.h:917:5: note: template<class _Key, class _Val, class _KeyOfValue, class _Compare, class _Alloc> bool std::operator<(const std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>&, const std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>&)
+     operator<(const _Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_tree.h:917:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/map:61:0,
+                 from /usr/local/include/opencv2/core/core.hpp:60,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_map.h:979:5: note: template<class _Key, class _Tp, class _Compare, class _Alloc> bool std::operator<(const std::map<_Key, _Tp, _Compare, _Alloc>&, const std::map<_Key, _Tp, _Compare, _Alloc>&)
+     operator<(const map<_Key, _Tp, _Compare, _Alloc>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_map.h:979:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::map<_Key, _Tp, _Compare, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/map:62:0,
+                 from /usr/local/include/opencv2/core/core.hpp:60,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_multimap.h:881:5: note: template<class _Key, class _Tp, class _Compare, class _Alloc> bool std::operator<(const std::multimap<_Key, _Tp, _Compare, _Alloc>&, const std::multimap<_Key, _Tp, _Compare, _Alloc>&)
+     operator<(const multimap<_Key, _Tp, _Compare, _Alloc>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_multimap.h:881:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::multimap<_Key, _Tp, _Compare, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/vector:64:0,
+                 from /usr/local/include/opencv2/core/core.hpp:63,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_vector.h:1421:5: note: template<class _Tp, class _Alloc> bool std::operator<(const std::vector<_Tp, _Alloc>&, const std::vector<_Tp, _Alloc>&)
+     operator<(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+     ^
+/usr/include/c++/4.8/bits/stl_vector.h:1421:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::vector<_Tp, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/list:63:0,
+                 from /usr/local/include/opencv2/video/background_segm.hpp:47,
+                 from /usr/local/include/opencv2/video/video.hpp:47,
+                 from /usr/local/include/opencv2/opencv.hpp:52,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_list.h:1631:5: note: template<class _Tp, class _Alloc> bool std::operator<(const std::list<_Tp, _Alloc>&, const std::list<_Tp, _Alloc>&)
+     operator<(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+     ^
+/usr/include/c++/4.8/bits/stl_list.h:1631:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::list<_Tp, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/deque:64:0,
+                 from /usr/local/include/opencv2/objdetect/objdetect.hpp:50,
+                 from /usr/local/include/opencv2/opencv.hpp:54,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_deque.h:273:5: note: template<class _Tp, class _Ref, class _Ptr> bool std::operator<(const std::_Deque_iterator<_Tp, _Ref, _Ptr>&, const std::_Deque_iterator<_Tp, _Ref, _Ptr>&)
+     operator<(const _Deque_iterator<_Tp, _Ref, _Ptr>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_deque.h:273:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Deque_iterator<_Tp, _Ref, _Ptr>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/deque:64:0,
+                 from /usr/local/include/opencv2/objdetect/objdetect.hpp:50,
+                 from /usr/local/include/opencv2/opencv.hpp:54,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_deque.h:281:5: note: template<class _Tp, class _RefL, class _PtrL, class _RefR, class _PtrR> bool std::operator<(const std::_Deque_iterator<_Tp, _Ref, _Ptr>&, const std::_Deque_iterator<_Tp, _RefR, _PtrR>&)
+     operator<(const _Deque_iterator<_Tp, _RefL, _PtrL>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_deque.h:281:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Deque_iterator<_Tp, _Ref, _Ptr>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/deque:64:0,
+                 from /usr/local/include/opencv2/objdetect/objdetect.hpp:50,
+                 from /usr/local/include/opencv2/opencv.hpp:54,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_deque.h:1975:5: note: template<class _Tp, class _Alloc> bool std::operator<(const std::deque<_Tp, _Alloc>&, const std::deque<_Tp, _Alloc>&)
+     operator<(const deque<_Tp, _Alloc>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_deque.h:1975:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::deque<_Tp, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/valarray:587:0,
+                 from /usr/local/include/opencv2/contrib/retina.hpp:76,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:987,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom1, class _Dom2> std::_Expr<std::_BinClos<std::__less, std::_Expr, std::_Expr, _Dom1, _Dom2>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const std::_Expr<_Dom2, typename _Dom2::value_type>&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
+     ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/valarray:587:0,
+                 from /usr/local/include/opencv2/contrib/retina.hpp:76,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:987,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__less, std::_Expr, std::_Constant, _Dom, typename _Dom::value_type>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const typename _Dom::value_type&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
+     ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/valarray:587:0,
+                 from /usr/local/include/opencv2/contrib/retina.hpp:76,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:987,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__less, std::_Constant, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const typename _Dom::value_type&, const std::_Expr<_Dom1, typename _Dom1::value_type>&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
+     ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   mismatched types ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’ and ‘int’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/valarray:587:0,
+                 from /usr/local/include/opencv2/contrib/retina.hpp:76,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:987,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__less, std::_Expr, std::_ValArray, _Dom, typename _Dom::value_type>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const std::valarray<typename _Dom::value_type>&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
+     ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/valarray:587:0,
+                 from /usr/local/include/opencv2/contrib/retina.hpp:76,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:987,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note: template<class _Dom> std::_Expr<std::_BinClos<std::__less, std::_ValArray, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__less, typename _Dom1::value_type>::result_type> std::operator<(const std::valarray<typename _Dom::value_type>&, const std::_Expr<_Dom1, typename _Dom1::value_type>&)
+     _DEFINE_EXPR_BINARY_OPERATOR(<, __less)
+     ^
+/usr/include/c++/4.8/bits/valarray_after.h:416:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::valarray<typename _Dom::value_type>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/local/include/opencv2/contrib/retina.hpp:76:0,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:987,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/valarray:1181:1: note: template<class _Tp> std::_Expr<std::_BinClos<std::__less, std::_ValArray, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__less, _Tp>::result_type> std::operator<(const std::valarray<_Tp>&, const std::valarray<_Tp>&)
+ _DEFINE_BINARY_OPERATOR(<, __less)
+ ^
+/usr/include/c++/4.8/valarray:1181:1: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::valarray<_Tp>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/local/include/opencv2/contrib/retina.hpp:76:0,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:987,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/valarray:1181:1: note: template<class _Tp> std::_Expr<std::_BinClos<std::__less, std::_ValArray, std::_Constant, _Tp, _Tp>, typename std::__fun<std::__less, _Tp>::result_type> std::operator<(const std::valarray<_Tp>&, const _Tp&)
+ _DEFINE_BINARY_OPERATOR(<, __less)
+ ^
+/usr/include/c++/4.8/valarray:1181:1: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::valarray<_Tp>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/local/include/opencv2/contrib/retina.hpp:76:0,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:987,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/valarray:1181:1: note: template<class _Tp> std::_Expr<std::_BinClos<std::__less, std::_Constant, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__less, _Tp>::result_type> std::operator<(const _Tp&, const std::valarray<_Tp>&)
+ _DEFINE_BINARY_OPERATOR(<, __less)
+ ^
+/usr/include/c++/4.8/valarray:1181:1: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   mismatched types ‘const std::valarray<_Tp>’ and ‘int’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/set:61:0,
+                 from /usr/local/include/opencv2/contrib/openfabmap.hpp:61,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:989,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_set.h:771:5: note: template<class _Key, class _Compare, class _Alloc> bool std::operator<(const std::set<_Key, _Compare, _Alloc>&, const std::set<_Key, _Compare, _Alloc>&)
+     operator<(const set<_Key, _Compare, _Alloc>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_set.h:771:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::set<_Key, _Compare, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/include/c++/4.8/set:62:0,
+                 from /usr/local/include/opencv2/contrib/openfabmap.hpp:61,
+                 from /usr/local/include/opencv2/contrib/contrib.hpp:989,
+                 from /usr/local/include/opencv2/opencv.hpp:59,
+                 from src/readLidarData.cpp:1:
+/usr/include/c++/4.8/bits/stl_multiset.h:756:5: note: template<class _Key, class _Compare, class _Alloc> bool std::operator<(const std::multiset<_Key, _Compare, _Alloc>&, const std::multiset<_Key, _Compare, _Alloc>&)
+     operator<(const multiset<_Key, _Compare, _Alloc>& __x,
+     ^
+/usr/include/c++/4.8/bits/stl_multiset.h:756:5: note:   template argument deduction/substitution failed:
+src/readLidarData.cpp:21:22: note:   ‘cv::Point2f {aka cv::Point_<float>}’ is not derived from ‘const std::multiset<_Key, _Compare, _Alloc>’
+     (p.y>=0 && p<img.cols));
+                      ^
+In file included from /usr/local/include/opencv2/core/core.hpp:4861:0,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/local/include/opencv2/core/mat.hpp:1984:1: note: bool cv::operator<(const cv::MatConstIterator&, const cv::MatConstIterator&)
+ operator < (const MatConstIterator& a, const MatConstIterator& b)
+ ^
+/usr/local/include/opencv2/core/mat.hpp:1984:1: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘const cv::MatConstIterator&’
+/usr/local/include/opencv2/core/mat.hpp:1305:20: note: cv::MatExpr cv::operator<(double, const cv::Mat&)
+ CV_EXPORTS MatExpr operator < (double s, const Mat& a);
+                    ^
+/usr/local/include/opencv2/core/mat.hpp:1305:20: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘double’
+/usr/local/include/opencv2/core/mat.hpp:1304:20: note: cv::MatExpr cv::operator<(const cv::Mat&, double)
+ CV_EXPORTS MatExpr operator < (const Mat& a, double s);
+                    ^
+/usr/local/include/opencv2/core/mat.hpp:1304:20: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘const cv::Mat&’
+/usr/local/include/opencv2/core/mat.hpp:1303:20: note: cv::MatExpr cv::operator<(const cv::Mat&, const cv::Mat&)
+ CV_EXPORTS MatExpr operator < (const Mat& a, const Mat& b);
+                    ^
+/usr/local/include/opencv2/core/mat.hpp:1303:20: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘const cv::Mat&’
+In file included from /usr/local/include/opencv2/core/core.hpp:4860:0,
+                 from /usr/local/include/opencv2/opencv.hpp:47,
+                 from src/readLidarData.cpp:1:
+/usr/local/include/opencv2/core/operations.hpp:3193:20: note: bool cv::operator<(const cv::FileNodeIterator&, const cv::FileNodeIterator&)
+ static inline bool operator < (const FileNodeIterator& it1, const FileNodeIterator& it2)
+                    ^
+/usr/local/include/opencv2/core/operations.hpp:3193:20: note:   no known conversion for argument 1 from ‘cv::Point2f {aka cv::Point_<float>}’ to ‘const cv::FileNodeIterator&’
+src/readLidarData.cpp: In function ‘cv::Point2f cartesianToGrid(const Point2f&)’:
+src/readLidarData.cpp:36:7: warning: unused variable ‘nb_cells_x’ [-Wunused-variable]
+   int nb_cells_x = (x_max-x_min)/x_step;
+       ^
+src/readLidarData.cpp:37:7: warning: unused variable ‘nb_cells_y’ [-Wunused-variable]
+   int nb_cells_y = (y_max-y_min)/y_step;
+       ^
+src/readLidarData.cpp: In function ‘void readLidarData()’:
+src/readLidarData.cpp:222:36: error: ‘meanImpactInGrid’ was not declared in this scope
+       if (validIndex(display_grid, meanImpactInGrid) && validIndex(display_grid, meanPredictedImpactImage)) {
+                                    ^
+src/readLidarData.cpp: In function ‘bool validIndex(cv::Mat, cv::Point2f)’:
+src/readLidarData.cpp:22:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
 make: *** [readLidarData.o] Error 1

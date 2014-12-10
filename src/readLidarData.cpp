@@ -6,6 +6,8 @@
 #include <iostream>
 #include <math.h>
 
+#include "readLidarData.h"
+
 using namespace cv;
 using namespace std;
 
@@ -32,18 +34,9 @@ void polygon (Mat& img, const vector<Point2f>& points, Scalar col) {
   }
 }
 Point2f cartesianToGrid (const Point2f& point) {
-  //  define the parameters of the grid
-  float x_min = -10.;
-  float x_max = 10.;
-  float y_min = 0;
-  float y_max = 30.;
-  float x_step = 0.2;
-  float y_step =  0.2;
-  int nb_cells_x = (x_max-x_min)/x_step;
-  int nb_cells_y = (y_max-y_min)/y_step;
 
-  if (point.x>x_min && point.x<x_max && point.y>y_min && point.y<y_max && point.y>0) {
-    return Point2f((point.x-x_min)/x_step, (y_max-(point.y-y_min))/y_step);
+  if (point.x>GRID_X_MIN && point.x<GRID_X_MAX && point.y>GRID_Y_MIN && point.y<GRID_Y_MAX && point.y>0) {
+    return Point2f((point.x-GRID_X_MIN)/GRID_X_STEP, (GRID_Y_MAX-(point.y-GRID_Y_MIN))/GRID_Y_STEP);
   }
   else {
     return Point2f(-1,-1);
@@ -62,20 +55,11 @@ Rect cartesianToGrid (const Rect& rect) {
 
 
 Point2f cartesianToImage (const Point2f& point) {
-  //  extrinsic parameters of the lidar
-  double lidar_pitch_angle = -1.*M_PI/180;
-  double lidar_height = 0.47;
-  //  parameters of the camera
-  double uo = 256;
-  double vo = 156;
-  double alpha_u = 410;
-  double alpha_v = 410;
-  double camera_height = 1.28;
-  double camera_ty = 1.8;
-
-  double z=camera_height -(lidar_height + sqrt(point.x*point.x+point.y*point.y)*sin(lidar_pitch_angle));
-  int u=(int)uo+alpha_u*(point.x/(point.y+camera_ty));
-  int v=(int)vo+alpha_v*(z/(point.y+camera_ty));
+  double z=CAMERA_HEIGHT -(LIDAR_HEIGHT + sqrt(point.x*point.x+point.y*point.y)*sin(LIDAR_PITCH_ANGLE));
+  int u=(int)INTRINSIC_U0 + INTRINSIC_ALPHA_U *
+    (point.x/(point.y+CAMERA_TY));
+  int v=(int)INTRINSIC_V0+ INTRINSIC_ALPHA_V *
+    (z/(point.y+CAMERA_TY));
 
   return Point2f(u,v);
 }
@@ -94,12 +78,32 @@ vector<Point2f> cartesianToImage (const Rect& rect) {
   return ret;
 }
 
-void setPixelColor(Mat img, const Point2f& pixelCoord, const Scalar& color) {
-  img.at<unsigned char>(pixelCoord.y, 3*pixelCoord.x) = color[0];
-  img.at<unsigned char>(pixelCoord.y, 3*pixelCoord.x+1) = color[1];
-  img.at<unsigned char>(pixelCoord.y, 3*pixelCoord.x+2) = color[2];
+void drawOnImage (Mat& img, Point2f impact, Point2f pImpact, Rect roi) {
+  Point2f meanImpactImage = cartesianToImage(impact);
+  Point2f meanPredictedImpactImage = cartesianToImage(pImpact);
+  vector<Point2f> roiImage = cartesianToImage(roi);
+  circle(img, meanImpactImage, 1, Scalar(255,0,0));
+  circle(img, meanPredictedImpactImage, 1, Scalar(0,255,255));
+  polygon(img, roiImage, Scalar(0,255,0));
 }
 
+void drawOnGrid (Mat& img, Point2f impact, Point2f pImpact, Point2f speedPredicted, Rect roi) {
+  Point2f meanImpactGrid = cartesianToGrid(impact);
+  Point2f meanPredictedImpactGrid = cartesianToGrid(pImpact);
+  Rect roiGrid = cartesianToGrid(roi);
+  if (validIndex(img, meanImpactGrid)) {
+    circle(img, meanImpactGrid, 1, Scalar(255,0,0));
+  }
+  if(validIndex(img, meanPredictedImpactGrid)) {
+    circle(img, meanPredictedImpactGrid, 1, Scalar(0,255,255));
+  }
+  // the speed
+  line(img, meanPredictedImpactGrid, meanPredictedImpactGrid + speedPredicted, Scalar(0,0,255));
+
+  if (validIndex(img, roiGrid.tl()) && validIndex(img, roiGrid.br())) {
+    rectangle(img, roiGrid, Scalar(0,255,0));
+  }
+}
 void readLidarData () {
   //  Read lidar data from a file
   Mat lidar_data;
@@ -133,26 +137,6 @@ void readLidarData () {
 
 
 
-  //  extrinsic parameters of the lidar
-  double lidar_pitch_angle = -1.*M_PI/180;
-  double lidar_height = 0.47;
-  //  parameters of the camera
-  double uo = 256;
-  double vo = 156;
-  double alpha_u = 410;
-  double alpha_v = 410;
-  double camera_height = 1.28;
-  double camera_ty = 1.8;
-
-  //  define the parameters of the grid
-  float x_min = -10.;
-  float x_max = 10.;
-  float y_min = 0;
-  float y_max = 30.;
-  float x_step = 0.2;
-  float y_step =  0.2;
-  int nb_cells_x = (x_max-x_min)/x_step;
-  int nb_cells_y = (y_max-y_min)/y_step;
 
 
   char key = 'a';
@@ -160,8 +144,8 @@ void readLidarData () {
 
   while (key != 'q' && frame_nb != nb_frames)
     {
-        //  Allocation/initialization of the grid
-      Mat grid = Mat::zeros(Size(nb_cells_x, nb_cells_y), CV_32F);
+      //  Allocation/initialization of the grid
+      Mat grid = Mat::zeros(Size(GRID_NB_CELLS_X, GRID_NB_CELLS_Y), CV_32F);
       //  Read the stereo image
       ostringstream filename;
       filename<<"data/img/left_img_"<<frame_nb<<".png";
@@ -179,36 +163,29 @@ void readLidarData () {
       shiftRoi(bicyleRoi, meanPredicted);
 
       //  Process all the lidar impacts
-      for (int i=0; i<nb_impacts/2; ++i)
-        {
-          double x=lidar_data.at<double>(frame_nb, 2*i);
-          double y=lidar_data.at<double>(frame_nb, 2*i+1);
+      for (int i=0; i<nb_impacts/2; ++i) {
+        double x=lidar_data.at<double>(frame_nb, 2*i);
+        double y=lidar_data.at<double>(frame_nb, 2*i+1);
 
-          Point2f lidarImpact(x,y);
-          if (bicyleRoi.contains(lidarImpact)) {
-            allImpactSum+=lidarImpact;
-            totalImpactInRoi++;
-          }
-
-          //  compute the grid
-          if (x>x_min && x<x_max && y>y_min && y<y_max && y>0) {
-            grid.at<float>((y_max-(y-y_min))/y_step, (x-x_min)/x_step) = 1.0;
-          }
-
-          //  display on stereo image
-          if ((y>0 && y<30) && (x>-10 && x<10))
-            {
-              double z=camera_height -(lidar_height + sqrt(x*x+y*y)*sin(lidar_pitch_angle));
-              int u=(int)uo+alpha_u*(x/(y+camera_ty));
-              int v=(int)vo+alpha_v*(z/(y+camera_ty));
-              if (u>0 && u<left_img.cols && v>0 && v<left_img.rows)
-                {
-                  left_display_img.at<unsigned char>(v, 3*u) = 0;
-                  left_display_img.at<unsigned char>(v, 3*u+1) = 0;
-                  left_display_img.at<unsigned char>(v, 3*u+2) = 255;
-                }
-            }
+        Point2f lidarImpact(x,y);
+        if (bicyleRoi.contains(lidarImpact)) {
+          allImpactSum+=lidarImpact;
+          totalImpactInRoi++;
         }
+
+        //  compute the grid
+        Point2f onGrid(cartesianToGrid(lidarImpact));
+        grid.at<float>(onGrid.y, onGrid.x) = 1.0;
+
+        //  display on stereo image
+        if ((y>0 && y<30) && (x>-10 && x<10)) {
+          Point2f onImage(cartesianToImage(lidarImpact));
+          if (validIndex(left_display_img, onImage)) {
+            circle(left_display_img, onImage, 0, Scalar(0,0,255));
+          }
+        }
+      }
+
       Point2f previousMeanImpact(meanImpactInRoi);
       float totalImpactInRoiInv = 1./totalImpactInRoi;
       meanImpactInRoi = allImpactSum * totalImpactInRoiInv;
@@ -218,34 +195,15 @@ void readLidarData () {
                          meanImpactInRoi.y);
 
       KF.correct(measurement);
-      Point2f meanImpactImage = cartesianToImage(meanImpactInRoi);
-      Point2f meanPredictedImpactImage = cartesianToImage(meanPredicted);
-      vector<Point2f> roiImage = cartesianToImage(bicyleRoi);
-
-      Point2f meanImpactGrid = cartesianToGrid(meanImpactInRoi);
-      Point2f meanPredictedImpactGrid = cartesianToGrid(meanPredicted);
-      Rect roiGrid = cartesianToGrid(bicyleRoi);
 
       //   prepare the display of the grid
       Mat display_grid; //  to have a RGB grid for display
       grid.convertTo(display_grid, CV_8U, 255);
       cvtColor(display_grid, display_grid, CV_GRAY2RGB);
 
-      circle(left_display_img, meanImpactImage, 1, Scalar(255,0,0));
-      circle(left_display_img, meanPredictedImpactImage, 1, Scalar(0,255,255));
-      polygon(left_display_img, roiImage, Scalar(0,255,0));
 
-      if (validIndex(display_grid, meanImpactGrid)) {
-        circle(display_grid, meanImpactGrid, 1, Scalar(255,0,0));
-      }
-      if(validIndex(display_grid, meanPredictedImpactGrid)) {
-        circle(display_grid, meanPredictedImpactGrid, 1, Scalar(0,255,255));
-      }
-      line(display_grid, meanPredictedImpactGrid, meanPredictedImpactGrid + speedPredicted, Scalar(0,0,255));
-
-      if (validIndex(display_grid, roiGrid.tl()) && validIndex(display_grid, roiGrid.br())) {
-        rectangle(display_grid, roiGrid, Scalar(0,255,0));
-      }
+      drawOnImage(left_display_img, meanImpactInRoi, meanPredicted, bicyleRoi);
+      drawOnGrid(display_grid, meanImpactInRoi, meanPredicted, speedPredicted, bicyleRoi);
 
       Mat display_grid_large;// to have a large grid for display
       resize(display_grid, display_grid_large, Size(600,600));

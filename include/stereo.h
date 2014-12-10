@@ -1,15 +1,11 @@
 #ifndef STEREO_DOT_H
 #define STEREO_DOT_H
 
-#define INTRINSIC_U0 258
-#define INTRINSIC_V0 156
-#define INTRINSIC_ALPHA_U 410
-#define INTRINSIC_ALPHAU_V 410
-#define STEREO_BASELINE 0.22
-#define CAMERA_HEIGHT 1.128
 
 #include <opencv2/opencv.hpp>
 #include <vector>
+
+#include "utils.h"
 
 void loadStereoImg (std::vector<cv::Mat>& leftImages, std::vector<cv::Mat>& rightImages);
 

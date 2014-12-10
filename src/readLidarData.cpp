@@ -163,6 +163,7 @@ void readLidarData () {
       Mat prediction = KF.predict();
       Point2f meanPredicted(prediction.at<float>(0,0),
                             prediction.at<float>(0,1));
+      Point2f speedPredicted(prediction.at<float>(0,2), - prediction.at<float>(0,3));
       shiftRoi(bicyleRoi, meanPredicted);
 
       //  Process all the lidar impacts
@@ -228,6 +229,8 @@ void readLidarData () {
       if(validIndex(display_grid, meanPredictedImpactGrid)) {
         circle(display_grid, meanPredictedImpactGrid, 1, Scalar(0,255,255));
       }
+      line(display_grid, meanPredictedImpactGrid, meanPredictedImpactGrid + speedPredicted, Scalar(0,0,255));
+
       if (validIndex(display_grid, roiGrid.tl()) && validIndex(display_grid, roiGrid.br())) {
         rectangle(display_grid, roiGrid, Scalar(0,255,0));
       }

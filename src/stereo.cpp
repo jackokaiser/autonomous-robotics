@@ -45,7 +45,7 @@ void filterOutDisparity (const Mat& disparityMap, Mat& filteredDisparityMap, flo
 
 void computeVDisparity (const Mat& disparityMap, Mat& outputVDisparityMap) {
   double maxDisparity;
-  int scaleDownFactor = 1;
+  int scaleDownFactor = 16;
 
   minMaxLoc(disparityMap, NULL, &maxDisparity, NULL, NULL);
   int maxDisparityValue = max<int>(32,(int)maxDisparity / scaleDownFactor);
@@ -59,7 +59,9 @@ void computeVDisparity (const Mat& disparityMap, Mat& outputVDisparityMap) {
     linePointer = disparityMap.ptr<short>(i);
     for (int j = 0; j < disparityMap.cols; j++) {
       disparityMapValue = linePointer[j] / scaleDownFactor;
-      outputVDisparityMap.at<char>(i,(int)disparityMapValue)++;
+      if ((int) disparityMapValue > 0) {
+        outputVDisparityMap.at<unsigned char>(i,(int)disparityMapValue)++;
+      }
     }
   }
 }

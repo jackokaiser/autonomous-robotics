@@ -23,14 +23,14 @@ void loadStereoImg (vector<Mat>& leftImages, vector<Mat>& rightImages) {
 
 
 /*returns the distance from the point p1 to the line defined by normalized point-np and arbitrary point p0*/
-float lineD(Point2f &np, Point2f &p0, Point2f &p1)
+float lineD(const Point2f &np, const Point2f &p0, const Point2f &p1)
 {
   Point2f v = p1-p0;
   return v.y*np.x - v.x*np.y;
 }
 
 /*computes the equation of a line as y = mx + b */
-float lineY(Point2f &np, Point2f &p0, float X)
+float lineY(const Point2f &np, const Point2f &p0, float X)
 {
   float Y = np.y*(X-p0.x)/np.x + p0.y;
   return Y;

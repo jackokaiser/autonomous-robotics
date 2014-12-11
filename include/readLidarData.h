@@ -13,7 +13,6 @@
 #define GRID_NB_CELLS_X ((GRID_X_MAX-GRID_X_MIN)/GRID_X_STEP)
 #define GRID_NB_CELLS_Y ((GRID_Y_MAX-GRID_Y_MIN)/GRID_Y_STEP)
 
-
 void readLidarData ();
 
 #endif

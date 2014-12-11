@@ -25,12 +25,14 @@ int main(int argc, char **argv)
     return 0;
   }
 
-switch(atoi(argv[1])) {
+  switch(atoi(argv[1])) {
   case CARTESIAN_SEG:
-    cartesianSeg();
+    cout<<"Cartesian filtering"<<endl;
+    stereoDisparity(CARTESIAN_SPACE);
     break;
   case DISPARITY_SEG:
-    disparitySeg();
+    cout<<"Disparity filtering"<<endl;
+    stereoDisparity(DISPARITY_SPACE);
     break;
   case LIDAR_TRACK:
     readLidarData();

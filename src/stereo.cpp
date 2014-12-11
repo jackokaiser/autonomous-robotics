@@ -188,62 +188,46 @@ void clustering(const Mat& disparityMapFiltered, Mat& imgLeft, Mat& imgRight) {
   imgRight = imgRightC;
 }
 
-void cartesianSeg () {
+void stereoDisparity (unsigned char flags) {
   vector<Mat> leftImages;
   vector<Mat> rightImages;
   Mat disparityMap;
   Mat outputImg;
-  Mat displayImg;
+  Mat displayDisparity;
+  Mat displayLeft;
+  Mat displayRight;
   loadStereoImg(leftImages, rightImages);
   unsigned int numberOfImages = leftImages.size();
 
   StereoSGBM sgbm = StereoSGBM(0, 32, 7, 8*7*7, 32*7*7, 2, 0, 5, 100, 32, true);
 
   for (unsigned int i=0; i < numberOfImages; i++) {
-
+    cout << "Computing image "<<i+1<<endl;
     sgbm( leftImages[i], rightImages[i], disparityMap );
-
-    cartesianFiltering(disparityMap, outputImg);
+    if (flags & CARTESIAN_SPACE) {
+      cartesianFiltering(disparityMap, outputImg);
+    }
+    else { // flags | DISPARITY_SPACE
+      disparityFiltering(disparityMap, outputImg);
+    }
 
     clustering(outputImg, leftImages[i], rightImages[i]);
 
-    leftImages[i].convertTo(displayImg, CV_8UC1);
-    imshow("result", displayImg);
+    leftImages[i].convertTo(displayLeft, CV_8UC1);
+    rightImages[i].convertTo(displayRight, CV_8UC1);
+    outputImg.convertTo(displayDisparity, CV_8UC1);
+
+    imshow("clustered left", displayLeft);
+    imshow("clustered right", displayRight);
+    imshow("filtered disparity map", displayDisparity);
+
     waitKey();
+    cout << "Press any key"<<endl;
 
     disparityMap.release();
-    displayImg.release();
     outputImg.release();
-  };
-}
-
-void disparitySeg () {
-  vector<Mat> leftImages;
-  vector<Mat> rightImages;
-  Mat disparityMap;
-  Mat outputImg;
-  Mat displayImg;
-  loadStereoImg(leftImages, rightImages);
-  unsigned int numberOfImages = leftImages.size();
-
-  StereoSGBM sgbm = StereoSGBM(0, 32, 7, 8*7*7, 32*7*7, 2, 0, 5, 100, 32, true);
-
-  for (unsigned int i=0; i < numberOfImages; i++) {
-
-    sgbm( leftImages[i], rightImages[i], disparityMap );
-
-    disparityFiltering(disparityMap, outputImg);
-    clustering(outputImg, leftImages[i], rightImages[i]);
-
-    leftImages[i].convertTo(displayImg, CV_8UC1);
-    imshow("result", displayImg);
-    outputImg.convertTo(displayImg, CV_8UC1);
-    waitKey();
-    imshow("result", displayImg);
-    waitKey();
-
-    disparityMap.release();
-    displayImg.release();
-    outputImg.release();
+    displayLeft.release();
+    displayRight.release();
+    displayDisparity.release();
   };
 }

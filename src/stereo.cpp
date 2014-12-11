@@ -169,7 +169,7 @@ void clustering(const Mat& disparityMapFiltered, Mat& imgLeft, Mat& imgRight) {
   cvtColor(imgLeft,imgLeftC,CV_GRAY2BGR);
   for (int i=1; i<nbObjects; i++)
     {
-      if (objects[i][5]>150)
+      if (objects[i][5]>50)
         {
           objects[i][4] /= objects[i][5];
           rectangle(imgLeftC,Point(objects[i][2],objects[i][0]),Point(objects[i][3],objects[i][1]),Scalar(0,255,0),1);
@@ -178,7 +178,7 @@ void clustering(const Mat& disparityMapFiltered, Mat& imgLeft, Mat& imgRight) {
   cvtColor(imgRight,imgRightC,CV_GRAY2BGR);
   for (int i=1; i<nbObjects; i++)
     {
-      if (objects[i][5]>150)
+      if (objects[i][5]>50)
         {
           objects[i][4] /= objects[i][5];
           rectangle(imgRightC,Point(objects[i][2],objects[i][0]),Point(objects[i][3],objects[i][1]),Scalar(0,255,0),1);

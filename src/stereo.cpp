@@ -21,48 +21,6 @@ void loadStereoImg (vector<Mat>& leftImages, vector<Mat>& rightImages) {
   }
 }
 
-void fitLineRansac(const vector<Point2f> points, Vec4f &line, int iterations, double sigma, double a_max)
-{
-  int n = points.size();
-
-  if(n<2)
-    {
-      return;
-    }
-
-  RNG rng;
-  double bestScore = -1.;
-  for(int k=0; k<iterations; k++)
-    {
-      int i1=0, i2=0;
-      while(i1==i2)
-        {
-          i1 = rng(n);
-          i2 = rng(n);
-        }
-      const Point2f& p1 = points[i1];
-      const Point2f& p2 = points[i2];
-
-      Point2f dp = p2-p1;
-      dp *= 1./norm(dp);
-      double score = 0;
-
-      if(fabs((double)(dp.x>1.e-5)) && fabs(dp.y/dp.x)<=a_max)
-        {
-          for(int i=0; i<n; i++)
-            {
-              Point2f v = points[i]-p1;
-              double d = v.y*dp.x - v.x*dp.y;
-              score += exp(-0.5*d*d/(sigma*sigma));
-            }
-        }
-      if(score > bestScore)
-        {
-          line = Vec4f(dp.x, dp.y, p1.x, p1.y);
-          bestScore = score;
-        }
-    }
-}
 
 /*returns the distance from the point p1 to the line defined by normalized point-np and arbitrary point p0*/
 float lineD(Point2f &np, Point2f &p0, Point2f &p1)
@@ -101,11 +59,12 @@ void detectCartesian (const Mat& disparityMap, Mat& filteredDisparityMap, float 
   }
 }
 
-void computeVDisparity (const Mat& disparityMap, Mat& outputVDisparityMap) {
+void computeVDisparity (const Mat& disparityMap, Mat& filteredDisparityMap) {
   int maxDisparityValue = 32;
   int scaleDownFactor = 16;
+  filteredDisparityMap = disparityMap.clone();
 
-  outputVDisparityMap = Mat::zeros(disparityMap.rows, maxDisparityValue, CV_8UC1);
+  Mat vDisparityMap = Mat::zeros(disparityMap.rows, maxDisparityValue, CV_8UC1);
 
   const short* linePointer;
   short disparityMapValue;
@@ -114,10 +73,49 @@ void computeVDisparity (const Mat& disparityMap, Mat& outputVDisparityMap) {
     for (int j = 0; j < disparityMap.cols; j++) {
       disparityMapValue = linePointer[j] / scaleDownFactor;
       if (disparityMapValue > 0.) {
-        outputVDisparityMap.at<unsigned char>(i,(int)disparityMapValue)++;
+        vDisparityMap.at<unsigned char>(i,(int)disparityMapValue)++;
       }
     }
   }
+  threshold(vDisparityMap,vDisparityMap, 60.0, THRESH_BINARY, THRESH_TOZERO);
+
+  vector<Point2f> candidatesRansac;
+
+  for(int i = 0; i < vDisparityMap.rows; i++) {
+    for (int j = 0; j < vDisparityMap.cols; j++) {
+      if(vDisparityMap.at<unsigned char>(i,j) > 0) {
+        candidatesRansac.push_back(Point2f(j,i));
+      }
+    }
+  }
+  Vec4f line;
+  int iterations = 1000;
+  double sigma = 1.0;
+  double a_max = 7.0;
+
+  //apply Ransac
+  fitLineRansac(candidatesRansac, line, iterations, sigma, a_max);
+  Point2f lnp;
+  Point2f lp0;
+  lnp.x = line[0];
+  lnp.y = line[1];
+  lp0.x = line[2];
+  lp0.y = line[3];
+
+  for(int v = 0; v < disparityMap.rows; v++)
+    {
+      for(int u = 0; u < disparityMap.cols; u++)
+        {
+          float value = (float)disparityMap.at<short>(v,u)/16.;
+          Point2f thePoint(value,(float)v);
+          float d = lineD(lnp,lp0, thePoint);
+          float epsilon = 2.5;
+          if((d > -epsilon) || (d < -6.))
+            {
+              filteredDisparityMap.at<short>(v,u) = 0;
+            }
+        }
+    }
 }
 
 void clustering(const Mat& disparityMapFiltered, Mat& imgLeft, Mat& imgRight) {
@@ -134,10 +132,7 @@ void clustering(const Mat& disparityMapFiltered, Mat& imgLeft, Mat& imgRight) {
   dilate(erosion_img, dilation_img, element);
   //segment the image
   Mat segmented_img(disparityMapFiltered.size(), CV_8UC1);
-  cout<<"before "<<endl;
   int nbObjects = segmentDisparity(dilation_img, segmented_img);
-  cout<<"after "<< nbObjects <<endl;
-  cout<<nbObjects<<endl;
   //imshow("Segmented Disparity 1", segmented_img);
 
   //printf("Max label 1: %d \n", nbObjects);
@@ -238,8 +233,12 @@ void disparitySeg () {
     sgbm( leftImages[i], rightImages[i], disparityMap );
 
     computeVDisparity(disparityMap, outputImg);
+    clustering(outputImg, leftImages[i], rightImages[i]);
 
+    leftImages[i].convertTo(displayImg, CV_8UC1);
+    imshow("result", displayImg);
     outputImg.convertTo(displayImg, CV_8UC1);
+    waitKey();
     imshow("result", displayImg);
     waitKey();
 

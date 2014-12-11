@@ -17,7 +17,5 @@ void disparitySeg ();
 void cartesianSeg ();
 float lineY(cv::Point2f &np, cv::Point2f &p0, float X);
 float lineD(cv::Point2f &np, cv::Point2f &p0, cv::Point2f &p1);
-void fitLineRansac(const std::vector<cv::Point2f> points, cv::Vec4f &line, int iterations, double sigma, double a_max);
-
 
 #endif

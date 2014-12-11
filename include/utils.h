@@ -17,4 +17,6 @@
 /*returns a 8bit Grey image where each pixel represent the index of the object (0 corresponds to the background*/
 unsigned int segmentDisparity(const cv::Mat &disparity, cv::Mat &output);
 
+void fitLineRansac(const std::vector<cv::Point2f> points, cv::Vec4f &line, int iterations, double sigma, double a_max);
+
 #endif

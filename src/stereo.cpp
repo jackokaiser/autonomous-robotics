@@ -36,7 +36,7 @@ float lineY(Point2f &np, Point2f &p0, float X)
   return Y;
 }
 
-void detectCartesian (const Mat& disparityMap, Mat& filteredDisparityMap, float tooCloseThreshold, float tooHighThreshold) {
+void cartesianFiltering (const Mat& disparityMap, Mat& filteredDisparityMap, float tooCloseThreshold, float tooHighThreshold) {
   disparityMap.convertTo(filteredDisparityMap, CV_32F);
 
   Point3f pixelInWorld;
@@ -59,7 +59,7 @@ void detectCartesian (const Mat& disparityMap, Mat& filteredDisparityMap, float 
   }
 }
 
-void computeVDisparity (const Mat& disparityMap, Mat& filteredDisparityMap) {
+void disparityFiltering (const Mat& disparityMap, Mat& filteredDisparityMap) {
   int maxDisparityValue = 32;
   int scaleDownFactor = 16;
   filteredDisparityMap = disparityMap.clone();
@@ -203,7 +203,7 @@ void cartesianSeg () {
 
     sgbm( leftImages[i], rightImages[i], disparityMap );
 
-    detectCartesian(disparityMap, outputImg);
+    cartesianFiltering(disparityMap, outputImg);
 
     clustering(outputImg, leftImages[i], rightImages[i]);
 
@@ -232,7 +232,7 @@ void disparitySeg () {
 
     sgbm( leftImages[i], rightImages[i], disparityMap );
 
-    computeVDisparity(disparityMap, outputImg);
+    disparityFiltering(disparityMap, outputImg);
     clustering(outputImg, leftImages[i], rightImages[i]);
 
     leftImages[i].convertTo(displayImg, CV_8UC1);

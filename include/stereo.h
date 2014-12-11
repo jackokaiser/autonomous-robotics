@@ -9,9 +9,9 @@
 
 void loadStereoImg (std::vector<cv::Mat>& leftImages, std::vector<cv::Mat>& rightImages);
 
-void detectCartesian (const cv::Mat& disparityMap, cv::Mat& filteredDisparityMap, float tooCloseThreshold=0.2, float tooHighThreshold=2.5);
+void cartesianFiltering (const cv::Mat& disparityMap, cv::Mat& filteredDisparityMap, float tooCloseThreshold=0.2, float tooHighThreshold=2.5);
 
-void computeVDisparity (const cv::Mat& disparityMap, cv::Mat& outputVDisparityMap);
+void disparityFiltering (const cv::Mat& disparityMap, cv::Mat& outputVDisparityMap);
 
 void disparitySeg ();
 void cartesianSeg ();

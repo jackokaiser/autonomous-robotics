@@ -18,6 +18,14 @@ main : $(OBJECTS)
 	$(CC) $(CFLAGS) -c $< -I $(INC_PATH)
 	mv $@ objects/
 
+cartesian : main
+	./bin/main 1
+
+disparity : main
+	./bin/main 2
+
+lidar : main
+	./bin/main 3
 
 archive :
 	tar -cvf archive.tar makefile src/ include/ data/

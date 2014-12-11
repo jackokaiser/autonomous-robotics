@@ -21,7 +21,10 @@ int main(int argc, char **argv)
   cout<<"OpenCV version: "<<CV_MAJOR_VERSION<<"."<<CV_MINOR_VERSION<<endl;
 
   if (argc < 2) {
-    cout<<"Usage : "<<argv[0]<<" {exerciceNb}"<<endl;
+    cout<<"Usage : "<<argv[0]<<" {exerciceNb} "<<endl;
+    cout<<"\t\t 1 <-> cartesian space clustering"<<endl;
+    cout<<"\t\t 2 <-> disparity space clustering"<<endl;
+    cout<<"\t\t 3 <-> lidar tracking"<<endl;
     return 0;
   }
 

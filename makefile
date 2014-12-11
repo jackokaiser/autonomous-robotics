@@ -20,7 +20,7 @@ main : $(OBJECTS)
 
 
 archive :
-	tar -cvf archive.tar makefile src/ include/
+	tar -cvf archive.tar makefile src/ include/ data/
 	tar -rvf archive.tar --no-recursion bin objects lib
 	gzip archive.tar
 

@@ -14,4 +14,7 @@
 #define LIDAR_PITCH_ANGLE (-1.*M_PI/180)
 #define LIDAR_HEIGHT (0.47)
 
+/*returns a 8bit Grey image where each pixel represent the index of the object (0 corresponds to the background*/
+unsigned int segmentDisparity(const cv::Mat &disparity, cv::Mat &output);
+
 #endif

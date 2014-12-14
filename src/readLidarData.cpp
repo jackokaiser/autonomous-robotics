@@ -106,14 +106,19 @@ void drawOnGrid (Mat& img, Point2f impact, Point2f pImpact, Point2f speedPredict
 }
 
 void plotSpeedMagnitude (Mat img, int frame_nb, Point2f speed1, Point2f speed2) {
+  float scaleFactor = 30;
   float speed1Magn = sqrt(speed1.dot(speed1));
   float speed2Magn = sqrt(speed2.dot(speed2));
+  cout<<"speed 1"<<speed1Magn<<endl;
+  cout<<"speed 2 "<<speed2Magn<<endl;
 
-  Point2f point1(frame_nb, speed1Magn);
-  Point2f point2(frame_nb, speed2Magn);
-  circle(img, point1, 0, Scalar(0,0,255));
-  circle(img, point2, 0, Scalar(255,0,0));
-};
+  Point2f point1(frame_nb, speed1Magn * scaleFactor);
+  Point2f point2(frame_nb, speed2Magn * scaleFactor);
+
+
+  circle(img, point1, 0, Scalar(255,0,0));
+  circle(img, point2, 0, Scalar(0,0,255));
+}
 
 void readLidarData () {
   //  Read lidar data from a file
@@ -123,6 +128,8 @@ void readLidarData () {
   fs["lidarData"]>> lidar_data;
   int nb_impacts = lidar_data.cols;
   int nb_frames = lidar_data.rows;
+  int maxScaledUpSpeed = 60;
+  Mat displaySpeedMagnitudePlot = Mat::zeros(Size(nb_frames, maxScaledUpSpeed), CV_8UC3);
   Point2f initialRoiTopLeft(4., 9.);
   Point2f initialRoiBottomRight(7.5, 11.);
   Rect bicyleRoi(initialRoiTopLeft, initialRoiBottomRight);
@@ -146,9 +153,6 @@ void readLidarData () {
   KF.statePost.at<float>(0,3) = 0;
 
 
-
-
-  Mat displaySpeedMagnitudePlot = Mat::zeros(Size(nb_frames, 100), CV_8UC3);
 
   char key = 'a';
   int frame_nb = 0;
@@ -204,7 +208,6 @@ void readLidarData () {
 
       Point2f speedActual = meanImpactInRoi - previousMeanImpact;
 
-
       Mat measurement = (Mat_<float>(2, 1) <<
                          meanImpactInRoi.x,
                          meanImpactInRoi.y);
@@ -223,11 +226,13 @@ void readLidarData () {
 
       Mat display_grid_large;// to have a large grid for display
       resize(display_grid, display_grid_large, Size(600,600));
+      Mat displayPlotLarge;// to have a large grid for display
+      resize(displaySpeedMagnitudePlot, displayPlotLarge, Size(600,600));
 
       //  show images
       imshow("top view",  display_grid_large);
       imshow("left image", left_display_img);
-      imshow("speed plot", displaySpeedMagnitudePlot);
+      imshow("speed plot", displayPlotLarge);
 
       //  Wait for the user to press a key
       frame_nb++;

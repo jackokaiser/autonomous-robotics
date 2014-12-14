@@ -98,7 +98,7 @@ void drawOnGrid (Mat& img, Point2f impact, Point2f pImpact, Point2f speedPredict
     circle(img, meanPredictedImpactGrid, 1, Scalar(0,255,255));
   }
   // the speed
-  line(img, meanPredictedImpactGrid, meanPredictedImpactGrid + speedPredicted, Scalar(0,0,255));
+  // line(img, meanPredictedImpactGrid, meanPredictedImpactGrid + speedPredicted, Scalar(0,0,255));
 
   if (validIndex(img, roiGrid.tl()) && validIndex(img, roiGrid.br())) {
     rectangle(img, roiGrid, Scalar(0,255,0));
@@ -109,8 +109,6 @@ void plotSpeedMagnitude (Mat img, int frame_nb, Point2f speed1, Point2f speed2) 
   float scaleFactor = 30;
   float speed1Magn = sqrt(speed1.dot(speed1));
   float speed2Magn = sqrt(speed2.dot(speed2));
-  cout<<"speed 1"<<speed1Magn<<endl;
-  cout<<"speed 2 "<<speed2Magn<<endl;
 
   Point2f point1(frame_nb, speed1Magn * scaleFactor);
   Point2f point2(frame_nb, speed2Magn * scaleFactor);
@@ -144,8 +142,8 @@ void readLidarData () {
                          0, 0, 1, 0,
                          0, 0, 0, 1);
   setIdentity(KF.measurementMatrix);
-  setIdentity(KF.processNoiseCov, Scalar::all(1e-1));
-  setIdentity(KF.measurementNoiseCov, Scalar::all(1e-5));
+  setIdentity(KF.processNoiseCov, Scalar::all(0));
+  setIdentity(KF.measurementNoiseCov, Scalar::all(0));
   setIdentity(KF.errorCovPost, Scalar::all(1));
   KF.statePost.at<float>(0,0) = meanImpactInRoi.x;
   KF.statePost.at<float>(0,1) = meanImpactInRoi.y;
@@ -175,6 +173,7 @@ void readLidarData () {
       Point2f meanPredicted(prediction.at<float>(0,0),
                             prediction.at<float>(0,1));
       Point2f speedPredicted(prediction.at<float>(0,2), - prediction.at<float>(0,3));
+      speedPredicted = speedPredicted * timestep;
 
       shiftRoi(bicyleRoi, meanPredicted);
 

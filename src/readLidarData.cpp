@@ -106,16 +106,21 @@ void drawOnGrid (Mat& img, Point2f impact, Point2f pImpact, Point2f speedPredict
 }
 
 void plotSpeedMagnitude (Mat img, int frame_nb, Point2f speed1, Point2f speed2) {
-  float scaleFactor = 30;
+  static Point2f previousPoint1(0,0);
+  static Point2f previousPoint2(0,0);
+
+  float scaleFactor = 50;
   float speed1Magn = sqrt(speed1.dot(speed1));
   float speed2Magn = sqrt(speed2.dot(speed2));
 
   Point2f point1(frame_nb, speed1Magn * scaleFactor);
   Point2f point2(frame_nb, speed2Magn * scaleFactor);
 
+  line(img, previousPoint1, point1, Scalar(255,0,0));
+  line(img, previousPoint2, point2, Scalar(0,0,255));
 
-  circle(img, point1, 0, Scalar(255,0,0));
-  circle(img, point2, 0, Scalar(0,0,255));
+  previousPoint1 = point1;
+  previousPoint2 = point2;
 }
 
 void readLidarData () {
@@ -226,7 +231,7 @@ void readLidarData () {
       Mat display_grid_large;// to have a large grid for display
       resize(display_grid, display_grid_large, Size(600,600));
       Mat displayPlotLarge;// to have a large grid for display
-      resize(displaySpeedMagnitudePlot, displayPlotLarge, Size(600,600));
+      resize(displaySpeedMagnitudePlot, displayPlotLarge, Size(300,300));
 
       //  show images
       imshow("top view",  display_grid_large);

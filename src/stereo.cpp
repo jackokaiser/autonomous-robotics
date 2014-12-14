@@ -109,8 +109,8 @@ void disparityFiltering (const Mat& disparityMap, Mat& filteredDisparityMap) {
           float value = (float)disparityMap.at<short>(v,u)/16.;
           Point2f thePoint(value,(float)v);
           float d = lineD(lnp,lp0, thePoint);
-          float epsilon = 2.5;
-          if((d > -epsilon) || (d < -6.))
+          float epsilon = 1.5;
+          if((d > -epsilon) || (d < -6.5))
             {
               filteredDisparityMap.at<short>(v,u) = 0;
             }
@@ -169,16 +169,24 @@ void clustering(const Mat& disparityMapFiltered, Mat& imgLeft, Mat& imgRight) {
   cvtColor(imgLeft,imgLeftC,CV_GRAY2BGR);
   for (int i=1; i<nbObjects; i++)
     {
-      if (objects[i][5]>50)
+      if (objects[i][5]>120)
         {
           objects[i][4] /= objects[i][5];
           rectangle(imgLeftC,Point(objects[i][2],objects[i][0]),Point(objects[i][3],objects[i][1]),Scalar(0,255,0),1);
+          // printf("Object #%d:\n",i);
+          // printf("v: %d - %d\n",objects[i][0],objects[i][1]);
+          // printf("u: %d - %d\n",objects[i][2],objects[i][3]);
+          // printf("Mean disparity: %d\nsize: %d\n",objects[i][4],objects[i][5]);
+          // int cu = (int)(objects[i][2]+objects[i][3])/2;
+          // int cv = (int)(objects[i][0]+objects[i][1])/2;
+          // printf("Center of bounding box: (%d, %d)\n\n",cu ,cv);
+
         }
     }
   cvtColor(imgRight,imgRightC,CV_GRAY2BGR);
   for (int i=1; i<nbObjects; i++)
     {
-      if (objects[i][5]>50)
+      if (objects[i][5]>120)
         {
           objects[i][4] /= objects[i][5];
           rectangle(imgRightC,Point(objects[i][2],objects[i][0]),Point(objects[i][3],objects[i][1]),Scalar(0,255,0),1);

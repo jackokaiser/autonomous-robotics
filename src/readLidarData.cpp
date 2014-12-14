@@ -100,9 +100,9 @@ void drawOnGrid (Mat& img, Point2f impact, Point2f pImpact, Point2f speedPredict
   // the speed
   // line(img, meanPredictedImpactGrid, meanPredictedImpactGrid + speedPredicted, Scalar(0,0,255));
 
-  // if (validIndex(img, roiGrid.tl()) && validIndex(img, roiGrid.br())) {
-  //   rectangle(img, roiGrid, Scalar(0,255,0));
-  // }
+  if (validIndex(img, roiGrid.tl()) && validIndex(img, roiGrid.br())) {
+    rectangle(img, roiGrid, Scalar(0,255,0));
+  }
 }
 
 void plotSpeedMagnitude (Mat img, int frame_nb, Point2f speed1, Point2f speed2) {

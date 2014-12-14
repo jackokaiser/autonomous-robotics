@@ -104,6 +104,17 @@ void drawOnGrid (Mat& img, Point2f impact, Point2f pImpact, Point2f speedPredict
     rectangle(img, roiGrid, Scalar(0,255,0));
   }
 }
+
+void plotSpeedMagnitude (Mat img, int frame_nb, Point2f speed1, Point2f speed2) {
+  float speed1Magn = sqrt(speed1.dot(speed1));
+  float speed2Magn = sqrt(speed2.dot(speed2));
+
+  Point2f point1(frame_nb, speed1Magn);
+  Point2f point2(frame_nb, speed2Magn);
+  circle(img, point1, 0, Scalar(0,0,255));
+  circle(img, point2, 0, Scalar(255,0,0));
+};
+
 void readLidarData () {
   //  Read lidar data from a file
   Mat lidar_data;
@@ -137,7 +148,7 @@ void readLidarData () {
 
 
 
-
+  Mat displaySpeedMagnitudePlot = Mat::zeros(Size(nb_frames, 100), CV_8UC3);
 
   char key = 'a';
   int frame_nb = 0;
@@ -160,6 +171,7 @@ void readLidarData () {
       Point2f meanPredicted(prediction.at<float>(0,0),
                             prediction.at<float>(0,1));
       Point2f speedPredicted(prediction.at<float>(0,2), - prediction.at<float>(0,3));
+
       shiftRoi(bicyleRoi, meanPredicted);
 
       //  Process all the lidar impacts
@@ -190,6 +202,9 @@ void readLidarData () {
       float totalImpactInRoiInv = 1./totalImpactInRoi;
       meanImpactInRoi = allImpactSum * totalImpactInRoiInv;
 
+      Point2f speedActual = meanImpactInRoi - previousMeanImpact;
+
+
       Mat measurement = (Mat_<float>(2, 1) <<
                          meanImpactInRoi.x,
                          meanImpactInRoi.y);
@@ -204,6 +219,7 @@ void readLidarData () {
 
       drawOnImage(left_display_img, meanImpactInRoi, meanPredicted, bicyleRoi);
       drawOnGrid(display_grid, meanImpactInRoi, meanPredicted, speedPredicted, bicyleRoi);
+      plotSpeedMagnitude(displaySpeedMagnitudePlot, frame_nb, speedActual, speedPredicted);
 
       Mat display_grid_large;// to have a large grid for display
       resize(display_grid, display_grid_large, Size(600,600));
@@ -211,6 +227,7 @@ void readLidarData () {
       //  show images
       imshow("top view",  display_grid_large);
       imshow("left image", left_display_img);
+      imshow("speed plot", displaySpeedMagnitudePlot);
 
       //  Wait for the user to press a key
       frame_nb++;
